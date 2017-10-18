@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      margin: 0;
+      padding: 16px;
+      cursor: default;
+      user-select: none;
+    }
+
+    * {
+      font-size: 16px;
+      line-height: 1.382;
+      font-family: Helvetica, Arial, sans-serif;
+    }
+
+    div,
+    p,
+    main,
+    button,
+    img {
+      padding: 0;
+      margin: 0;
+
+    }
+
+    [data-url],
+    a {
+      cursor: pointer;
+    }
+
+    button {
+      flex: 1;
+      height: 48px;
+      border: none;
+      background: none;
+      color: gray;
+    }
+
+    button:hover {
+      background-color: #eee;
+      color: black;
+    }
+
+    a {
+      color: #D73F30;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <main style="font-size:16px;width:280px">
+    <div style="padding:16px 0;text-align:center"><img title="版本1.0.0" src="static/logo.png" /></div>
+    <div id="main" style="text-align:center">
+        <strong><a href="#" data-url="https://github.com/ngolin/webdict">» 我们在这里 «</a></strong>
+    </div>
+    <div style="display:flex;border-top:solid 1px #eee;padding-top:16px;margin-top:16px">
+      <button data-url="vocabulary.html">查词记录</button>
+      <button data-url="notebook.html">笔记收集</button>
+    </div>
+  </main>
+  <script src="popup.js"></script>
+</body>
+
+</html>

@@ -36,5 +36,6 @@
     "js": [
       "content.js"
     ]
-  }]
+  }],
+  "content_security_policy": "script-src 'self' https://hm.baidu.com https://ssl.google-analytics.com; object-src 'self'"
 }

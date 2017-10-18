@@ -1,7 +1,11 @@
 /node_modules
 /__pycache__
 /dist/*.js
-/design
+
+/design/*
+!/design/*.png
+!/design/*.jpg
+!/design/*.gif
 
 /.vscode/*
 !/.vscode/settings.json

@@ -1,11 +1,12 @@
 {
   "manifest_version": 2,
-  "name": "查词在用",
-  "description": "查词在用 - 随时随地！",
+  "name": "webdict",
+  "description": "webdict - Play with Chrome",
   "version": "1.0.0",
   "browser_action": {
     "default_icon": "static/icon19.png",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "Your Profile"
   },
   "background": {
     "scripts": [
@@ -28,14 +29,12 @@
     "48": "static/icon48.png",
     "128": "static/icon128.png"
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "content.js"
-      ]
-    }
-  ]
+  "content_scripts": [{
+    "matches": [
+      "<all_urls>"
+    ],
+    "js": [
+      "content.js"
+    ]
+  }]
 }

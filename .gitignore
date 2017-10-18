@@ -7,9 +7,6 @@
 !/design/*.jpg
 !/design/*.gif
 
-/.vscode/*
-!/.vscode/settings.json
-
 /src/*
 !/src/background
 !/src/content

@@ -15,6 +15,7 @@
 !/src/shared
 !/src/vocabulary
 
+/src/**/*.js
 
 /server/*
 !/server/family.txt
@@ -33,4 +34,5 @@
 /**/*.pem
 /**/*.ppk
 /**/*.sh
+
 dist.crx

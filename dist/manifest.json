@@ -9,9 +9,10 @@
     "default_title": "Your Profile"
   },
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "page": "background.html" //,
+      // "scripts": [
+      //   "background.js"
+      // ]
   },
   "permissions": [
     "tabs",
@@ -37,5 +38,5 @@
       "content.js"
     ]
   }],
-  "content_security_policy": "script-src 'self' https://hm.baidu.com https://ssl.google-analytics.com; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://clients5.google.com; object-src 'self'"
 }

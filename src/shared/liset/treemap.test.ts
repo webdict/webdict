@@ -40,8 +40,9 @@ function listTest() {
   const list = new Array<Item<number, number>>();
   for (const key of ARRAY) {
     list.push(new Item(key, double(key)));
+    // always keep sorted as the tree does
+    list.sort((i1, i2) => i1.key - i2.key);
   }
-  list.sort((i1, i2) => i1.key - i2.key);
   initAndSortingTimeOfList += Date.now() - start;
   start = Date.now();
 
@@ -109,7 +110,7 @@ let count = 500;
 
 while (count--) {
   shuffle(ARRAY);
-  const switcher = Math.random() > 0.5;
+  const switcher = Math.random() >= 0.5;
   if (switcher) {
     listTest();
     treeTest();

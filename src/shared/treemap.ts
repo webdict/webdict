@@ -1,8 +1,8 @@
 // tslint:disable
 class Item<Key, Val> {
 
-  right: Item<Key, Val>;
-  left: Item<Key, Val>;
+  right: Item<Key, Val> = null;
+  left: Item<Key, Val> = null;
   red = true;
   size = 1;
 

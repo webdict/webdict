@@ -9,7 +9,7 @@ const VERSION = '__VERSION_HOLDER__';
 import * as trans from './trans';
 
 import { Entry, ServerEntry } from '../shared/typings';
-
+import ga from './ga';
 function resolveFromServer(entry: ServerEntry, qword: string) {
   if (entry.cleng) {
     entry.qword = qword.substr(0, entry.cleng);
@@ -49,12 +49,14 @@ const map: { [qword: string]: Entry } = Object.create(null);
 
 let mapSize = 0;
 
+
 export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry | undefined) => void) {
   const entry = map[qword] as Entry;
   if (entry) {
     if (entry !== EMPTY) {
       entry.trans = trans.get(entry.qword) || '[Not Found]';
       consume(entry);
+      ga('lookup', entry.qword);
     } else {
       const xhr = new XMLHttpRequest();
       xhr.open('GET', F_URL + encodeURIComponent(lang + qword), false);
@@ -68,6 +70,7 @@ export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry 
             if (lang === 'zh') baseEntry.cleng = qword.length;
             mapSize++;
             consume(map[qword] = baseEntry);
+            ga('lookup', qword);
           }
         } else consume(undefined);
       };
@@ -90,10 +93,14 @@ export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry 
           }
           mapSize++;
           consume(map[newEntry.qword] = newEntry);
+          ga('lookup', newEntry.qword);
         }
       } else consume(undefined);
     };
-    xhr.onerror = () => { consume(undefined); };
+    xhr.onerror = () => {
+      consume(undefined);
+      ga('lookup_error', qword);
+    };
     xhr.send();
   }
 }

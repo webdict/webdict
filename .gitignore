@@ -25,9 +25,9 @@
 !/server/razor.py
 !/server/main.py
 
-/**/test.py
-/**/test.ts
-/**/test.js
+/**/*.test.*
+
+/**/test.*
 
 /**/*.d.md
 /**/*.cmd

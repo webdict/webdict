@@ -10,12 +10,23 @@ class Item<Key, Val> {
 
 }
 
+/**
+ * Use for wrapping (key, val) pair(s) retrieved by min, max, forEach, get ect. for the purpose of:
+ * 1. hiding right, left, red, size members
+ * 2. and making the key member readonly.
+ * 
+ * `val` isn't marked as readonly to be mutable and therefore to implement map functionality.
+ * 
+ * @interface Entry
+ * @template Key 
+ * @template Val 
+ */
 interface Entry<Key, Val> {
   readonly key: Key;
   val: Val;
 }
 
-export default class RedBlackBinarySearchTree<Key, Val> {
+export default class RedBlackBinarySearchMap<Key, Val> {
 
   private root: Item<Key, Val> = null;
 
@@ -50,58 +61,60 @@ export default class RedBlackBinarySearchTree<Key, Val> {
   put(key: Key, val: Val) {
     // if (key === null) throw 'first argument to put() is null';
     // if (val === null) throw 'second argument to put() is null';
-    this.root = this.PUT(this.root, key, val);
+    let oldVal = null;
+    const PUT = (head: Item<Key, Val>, key: Key, val: Val): Item<Key, Val> => {
+      if (head === null) return new Item<Key, Val>(key, val);
+      const cmp = this.comptor(key, head.key);
+      if (cmp < 0) head.left = PUT(head.left, key, val);
+      else if (cmp > 0) head.right = PUT(head.right, key, val);
+      else[oldVal, head.val] = [head.val, val];
+
+      if (isRed(head.right) && !isRed(head.left)) head = rotateLeft(head);
+      if (isRed(head.left) && isRed(head.left.left)) head = rotateRight(head);
+      if (isRed(head.left) && isRed(head.right)) flipColor(head);
+      head.size = size(head.left) + size(head.right) + 1;
+      return head;
+    }
+    this.root = PUT(this.root, key, val);
     this.root.red = false;
-  }
-
-  private PUT(head: Item<Key, Val>, key: Key, val: Val): Item<Key, Val> {
-    if (head === null) return new Item<Key, Val>(key, val);
-
-    const cmp = this.comptor(key, head.key);
-    if (cmp < 0) head.left = this.PUT(head.left, key, val);
-    else if (cmp > 0) head.right = this.PUT(head.right, key, val);
-    else head.val = val;
-
-    if (isRed(head.right) && !isRed(head.left)) head = rotateLeft(head);
-    if (isRed(head.left) && isRed(head.left.left)) head = rotateRight(head);
-    if (isRed(head.left) && isRed(head.right)) flipColor(head);
-    head.size = size(head.left) + size(head.right) + 1;
-    return head;
+    return oldVal;
   }
 
 
 
-  delete(key: Key): void {
+  del(key: Key) {
     // if (key === null) throw 'argument to delete() is null';
-    if (this.GET(this.root, key) === null) return;
+    if (this.GET(this.root, key) === null) return null;
 
     if (!isRed(this.root.left) && !isRed(this.root.right)) {
       this.root.red = true;
     }
-    this.root = this.DELETE(this.root, key);
-    if (this.root !== null) this.root.red = false;
-  }
-
-  private DELETE(head: Item<Key, Val>, key: Key): Item<Key, Val> {
-
-    if (this.comptor(key, head.key) < 0) {
-      if (!isRed(head.left) && !isRed(head.left.left)) {
-        head = moveRedLeft(head);
+    let oldVal = null;
+    const DEL = (head: Item<Key, Val>, key: Key): Item<Key, Val> => {
+      if (this.comptor(key, head.key) < 0) {
+        if (!isRed(head.left) && !isRed(head.left.left)) {
+          head = moveRedLeft(head);
+        }
+        head.left = DEL(head.left, key);
+      } else {
+        if (isRed(head.left)) head = rotateRight(head);
+        if (this.comptor(key, head.key) === 0 && (head.right === null)) return null;
+        if (!isRed(head.right) && !isRed(head.right.left)) head = moveRedRight(head);
+        if (this.comptor(key, head.key) === 0) {
+          const x = this.MIN(head.right);
+          head.key = x.key;
+          [oldVal, head.val] = [head.val, x.val];
+          head.right = deleteMin(head.right);
+        } else head.right = DEL(head.right, key);
       }
-      head.left = this.DELETE(head.left, key);
-    } else {
-      if (isRed(head.left)) { head = rotateRight(head); }
-      if (this.comptor(key, head.key) === 0 && (head.right === null)) { return null; }
-      if (!isRed(head.right) && !isRed(head.right.left)) { head = moveRedRight(head); }
-      if (this.comptor(key, head.key) === 0) {
-        const x = this.MIN(head.right);
-        head.key = x.key;
-        head.val = x.val;
-        head.right = deleteMin(head.right);
-      } else head.right = this.DELETE(head.right, key);
+      return balance(head);
     }
-    return balance(head);
+    this.root = DEL(this.root, key);
+    if (this.root !== null) this.root.red = false;
+    return oldVal;
   }
+
+
   min(): Entry<Key, Val> | null {
     if (this.root === null) return null;
     return this.MIN(this.root);

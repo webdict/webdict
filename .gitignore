@@ -26,6 +26,7 @@
 !/server/main.py
 
 /**/*.test.*
+!/**/*.test.ts
 
 /**/test.*
 

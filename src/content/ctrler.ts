@@ -13,7 +13,7 @@ let absoluteRect: Rect;
 
 function handler(action: { 'action': Action }) {
   // TODO: react to actions...
-  console.log(action.action);
+  action.action;
 }
 
 namespace Dict {

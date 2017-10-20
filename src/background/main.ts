@@ -28,11 +28,11 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     contexts: ['selection'],
     id: 'ADD_NOTE',
-    title: '从选择文本创建笔记',
+    title: 'Add to Note Book',
   });
   chrome.contextMenus.create({
     contexts: ['page'],
     id: 'STOP_FIND',
-    title: '在本页关闭自动查词',
+    title: 'Stop Auto Pop-up',
   });
 });

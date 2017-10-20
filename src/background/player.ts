@@ -1,4 +1,4 @@
-import ga from './ga';
+import gtag from './gtag';
 const ZH_URL = '__DOMAIN_HOLDER__/static/pron/zh/';
 const UK_URL = '__DOMAIN_HOLDER__/static/pron/uk/';
 const US_URL = '__DOMAIN_HOLDER__/static/pron/us/';
@@ -30,7 +30,7 @@ export function play(id: string, tabId: number | undefined) {
       event.stopPropagation();
       newAudio.setAttribute('disabled', 'disabled');
       if (tabId !== undefined) chrome.tabs.sendMessage(tabId, id);
-      ga('play_error', id);
+      gtag('play_error', { id });
     };
   }
 }

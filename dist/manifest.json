@@ -3,10 +3,11 @@
   "name": "webdict",
   "description": "webdict - Play with Chrome",
   "version": "1.0.0",
+  "author": "Li Hongzhang <paindo@163.com>",
   "browser_action": {
     "default_icon": "static/icon19.png",
     "default_popup": "popup.html",
-    "default_title": "Your Profile"
+    "default_title": "About You"
   },
   "background": {
     "page": "background.html" //,
@@ -36,7 +37,8 @@
     ],
     "js": [
       "content.js"
-    ]
+    ],
+    "run_at": "document_end"
   }],
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://clients5.google.com; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'sha256-tOAB1KnvHDrMAoLuYpgAxHbihFJGRzHy0P9CoaaVybw=' https://www.googletagmanager.com https://www.google-analytics.com; object-src 'self'"
 }

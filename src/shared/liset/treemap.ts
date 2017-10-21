@@ -10,21 +10,37 @@ class Item<Key, Val> {
 }
 
 /**
- * Use for wrapping (key, val) pair(s) retrieved by min, max, forEach, get ect. for the purpose of:
- * 1. hiding right, left, red, size members
- * 2. and making the key member readonly.
- * 
- * `val` isn't marked as readonly to be mutable and therefore to implement map functionality.
+ * the actual node in the red black tree,
+ * but only exposes the members of `key` and `val` for accessing.
+ * also, with some restrictions:
+ * 1. do **not** cast the node to any other type for using.
+ * 2. the `key` is supposed to be readonly, if changed, the whole tree WILL break.
+ * 3. the `val` is mutable, if updated, the tree will be updated, too.
  */
 interface Entry<Key, Val> {
+  /**
+   * do not change the `key`! or else the tree will break.
+   */
   readonly key: Key;
+  /**
+   * if `val` is updated, the tree will be updated, too.
+   * this is powerful, but requires carefulness.
+   */
   val: Val;
 }
-
+/**
+ * a red black tree specifies with **index accessing**.
+ */
 export default class RedBlackBinarySearchMap<Key, Val> {
 
   private root: Item<Key, Val> = null;
 
+  /**
+   * @param comptor for natural ascending order, return `k1 - k2`. that is:
+   * 1. `1` for `k1 > k2`;
+   * 2. `0` for `k1 === k2`;
+   * 3. `-1` for `k1 < k2`.
+   */
   constructor(private comptor: (k1: Key, k2: Key) => number) { }
 
   size() {
@@ -35,6 +51,10 @@ export default class RedBlackBinarySearchMap<Key, Val> {
     this.root = null;
   }
 
+  /**
+   * get the corresponding value of the key or null if the key does not exists in the tree.
+   * @param key must not be `null` or `undefined`.
+   */
   get(key: Key) {
     // if (key === null) throw 'argument to get() is null';
     return this.GET(this.root, key);
@@ -49,9 +69,14 @@ export default class RedBlackBinarySearchMap<Key, Val> {
     return null;
   }
 
+  /**
+   * `true` if the key is in the tree, otherwise `false`.
+   * @param key must not be `null` or `undefined`.
+   */
   has(key: Key) {
     return this.GET(this.root, key) !== null;
   }
+
 
   /**
    * 1. if the `key` has already existed in the map,
@@ -59,6 +84,8 @@ export default class RedBlackBinarySearchMap<Key, Val> {
    * and finally return the old one.
    * 2. otherwise it puts the new (`key`, `val`) pair 
    * into the map and return null.
+   * @param key must not be `null` or `undefined`.
+   * @param val must not be `undefined`.
    */
   put(key: Key, val: Val): Val | null {
     // if (key === null) throw 'first argument to put() is null';
@@ -159,7 +186,7 @@ export default class RedBlackBinarySearchMap<Key, Val> {
     FOR_EACH(this.root);
   }
 
-  toArray<Aim>(map: (entry: Entry<Key, Val>, index: number) => Aim | undefined): Array<Aim> {
+  toArray<Aim>(mapAndFilter: (entry: Entry<Key, Val>, index: number) => Aim | undefined): Array<Aim> {
     if (this.root === null) return [];
     const array = new Array<Aim>(size(this.root));
     let index = 0;
@@ -170,7 +197,7 @@ export default class RedBlackBinarySearchMap<Key, Val> {
       const hiCmp = this.comptor(maxK, item.key);
       if (loCmp < 0) FOR_EACH(item.left);
       if (loCmp <= 0 && hiCmp >= 0) {
-        const aim = map(item, index++);
+        const aim = mapAndFilter(item, index++);
         if (aim !== undefined) array.push(aim);
       }
       if (hiCmp > 0) FOR_EACH(item.right);

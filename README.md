@@ -3,8 +3,8 @@
 <div align="center">
   <img src="design/logo128.png" alt="加载图片失败：查词在用" title="查词在用">
   <p align="center">
-    <a href="https://github.com/ngolin/webdict/blob/master/dist.crx?raw=true" target="_blank"><img src="https://img.shields.io/badge/download-_lastest_version-blue.svg" download></a>
-    <a href="#" target="_blank"><img src="https://img.shields.io/badge/goto-_chrome_webstore-brightgreen.svg" download></a>
+    <a href="https://github.com/ngolin/webdict/blob/master/webdict@latest.crx?raw=true" target="_blank"><img src="https://img.shields.io/badge/download-_lastest_version-blue.svg" download></a>
+    <a href="https://chrome.google.com/webstore/detail/webdict/kbiinngndpkahmlokpocicmmcoihhocg" target="_blank"><img src="https://img.shields.io/badge/goto-_chrome_webstore-brightgreen.svg" download></a>
   </p>
 </div>
 
@@ -12,10 +12,10 @@
 ## 马上使用
 
 
-> 你可能需要先下载安装<a href="https://www.baidu.com/s?ie=UTF-8&wd=chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8" target="_blank"> Chrome 浏览器</a>，也就是<a href="https://www.baidu.com/s?ie=UTF-8&wd=%E8%B0%B7%E6%AD%8C%E6%B5%8F%E8%A7%88%E5%99%A8" target="_blank">谷歌浏览器</a>。虽然 Chrome 不太好用，我们也不断在找它的替代品，但是八年来一直都没有找到合适的。（如果你找到了更好用的浏览器，请记得告诉我们，:))
+> 你可能需要先下载安装桌面端的<a href="https://www.baidu.com/s?ie=UTF-8&wd=chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8" target="_blank"> Chrome 浏览器</a>，也就是<a href="https://www.baidu.com/s?ie=UTF-8&wd=%E8%B0%B7%E6%AD%8C%E6%B5%8F%E8%A7%88%E5%99%A8" target="_blank">谷歌浏览器</a>，虽然用它打开本页面。虽然 Chrome 不太好用，我们也不断在找它的替代品，但是八年来一直都没有找到合适的。（如果你找到了更好用的浏览器，请记得告诉我们，:))
 
 
-从 <a href="#" target="_blank">Chrome 应用商店</a>在线安装，**如果此路不通**，请<a href="https://github.com/ngolin/webdict/blob/master/dist.crx?raw=true" target="_blank">离线下载</a>，然后再以下步骤本地安装：
+从 <a href="https://chrome.google.com/webstore/detail/webdict/kbiinngndpkahmlokpocicmmcoihhocg" target="_blank">Chrome 应用商店</a>在线安装，**如果此路不通**，请<a href="https://github.com/ngolin/webdict/blob/master/webdict@latest.crx?raw=true" target="_blank">离线下载</a>，然后再以下步骤本地安装：
 
 
 1. 打开 **扩展程序(Extensions)** 页面：
@@ -41,6 +41,38 @@
 <div align="center">
   <img src="design/screenshot-zh.png" alt="加载图片失败：Dict in Use">
 </div>
+
+
+## 历史版本
+
+### `1.0.0`
+View definitions and play sounds of new words seemlessly as you browse the web.
+
+IMPORTANT:
+ - After installing this extension, either **reload** your open tabs or **restart** Chrome to activate the pop-up bubble.
+ - This extension will work on almost all websites and local files opened with Chrome, but all extensions are **disabled** on Chrome Web Store pages **(including this one)**.
+ - If the extension is **not** working for you, please make sure to inform us  on [Github](https://www.github.com/ngolin/webdict).
+
+
+
+<div align="center">
+  <img src="design/small_tile.png" title="Promotional tile image">
+</div>
+
+
+
+With this extension, you can:
+1. Double-click or select any word to view its definition and play sounds.
+2. Update the definition of the word by your own editing.
+3. Store a history of words you've looked up, in case you practice them later.
+4. Select any text on the web pages and save it as a note.
+
+
+Supported languages:
+ - `Chinese (Simplified)`
+ - `Chinese (Traditional)`
+ - `English (UK)`
+ - `English (US)`
 
 
 ## 项目结构
@@ -126,7 +158,7 @@
 </ul>
 
 
-&emsp;&emsp;**2** 由于这个插件的`contentscript`会单独注入到每个页面中而且仅在最新版的 Chrome 浏览器中运行，所以请保持使用**最直接**的 JavaScript, 不需引入 react、vue 或 angular 之类的依赖，也无需作浏览器兼容处理。
+&emsp;&emsp;**2** 由于这个插件的`contentscript`会单独注入到每个页面中而且仅在最新版的 Chrome 浏览器中运行，所以请保持使用**最直接**的 JavaScript, 不需引入 react、vue 或 angular 之类的构架，也无需作浏览器兼容处理。但是后续版本将用 react 构建 vocabulary 和 notebook 两个单页应用。
 
 
 ## 未来计划

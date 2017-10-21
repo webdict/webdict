@@ -21,7 +21,7 @@
 1. 打开 **扩展程序(Extensions)** 页面：
     1. 在地址栏输入`chrome://extensions/`
     2. 通过菜单导航`更多工具 > 扩展程序(More tools > Extensions)`
-2. 将刚刚离线下载的`.crx`文件拖到 **扩展程序** 页面释放即可安装。
+2. 将刚刚离线下载的`.crx`文件拖到 **扩展程序** 页面释放即可安装，然后勾选`启用(Enabled)`
 
 
 ## 使用截屏
@@ -51,7 +51,7 @@ View definitions and play sounds of new words seemlessly as you browse the web.
 IMPORTANT:
  - After installing this extension, either **reload** your open tabs or **restart** Chrome to activate the pop-up bubble.
  - This extension will work on almost all websites and local files opened with Chrome, but all extensions are **disabled** on Chrome Web Store pages **(including this one)**.
- - If the extension is **not** working for you, please make sure to inform us  on [Github](https://www.github.com/ngolin/webdict).
+ - If the extension is **not** working for you, please make sure to inform us  on [GitHub](https://www.github.com/ngolin/webdict).
 
 
 

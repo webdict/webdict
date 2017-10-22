@@ -28,7 +28,7 @@
 
 
 <h3 align="center" style="color:#07255e">
-  英文 · 英式 · 美式 · 对比发音
+  英文 · 英美发音
 </h3>
 <div align="center">
   <img src="design/screenshot.gif" alt="加载动画失败：Dict in Use">
@@ -36,7 +36,7 @@
 <p></p>
 <p></p>
 <h3 align="center" style="color:#8f0610">
-  中文 · 简体 · 繁体 · 比较字形
+  中文 · 繁简字形
 </h3>
 <div align="center">
   <img src="design/screenshot-zh.png" alt="加载图片失败：Dict in Use">

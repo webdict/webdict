@@ -19,6 +19,7 @@
 
 /server/*
 !/server/family.txt
+!/server/counter.py
 !/server/family.py
 !/server/cursor.py
 !/server/server.py

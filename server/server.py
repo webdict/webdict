@@ -59,7 +59,14 @@ def define(text: str):
 @app.route('/s/count')
 def count():
     '''function docstring'''
-    return str(cursor.get_count())
+    return cursor.count()
+
+
+@app.route('/s/reset')
+def reset():
+    '''function docstring'''
+    cursor.reset()
+    return '', 204
 
 
 @app.route('/definition', methods=['POST'])

@@ -1,11 +1,12 @@
+import sqlite3
 from razor import fork_word
 from family import family
-import sqlite3
+from counter import Counter
 
 con = sqlite3.connect('vocab.db')
 cur = con.cursor()
-count = 0
 
+count = Counter()
 
 def clist(text: str):
     res = cur.execute(
@@ -55,16 +56,13 @@ def pinvin(pinv: str, suffix: str = ''):
     return pinv + suffix
 
 
-
-
 def query(word: str, cleng: bool):
     trans = defin(word)
     data = {'trans': trans} if trans else dict()
     sql = "SELECT pinvin FROM pinv_table WHERE word = '%s'" % word if cleng else "SELECT pronuk, pos, pronus FROM pron_table WHERE word COLLATE NOCASE = '%s'" % word
     res = cur.execute(sql)
-    global count
-    count += 1
-    data['count'] = count
+    count.update()
+    data['count'] = count.count
     if cleng:
         data['poses'] = [pinvin(res.fetchone()[0])]
         return data
@@ -88,9 +86,11 @@ def define(word: str, tran: str):
         cur.execute(
             "INSERT OR REPLACE INTO defin_table(word, defin) VALUES('%s', '%s')" % (word, tran))
 
+def count():
+    return count.html()
 
-def get_count():
-    return count
+def reset():
+    count.reset()
 
-
-__all__ = ['wlist', 'clist', 'query', 'define', 'check_define', 'get_count']
+__all__ = ['wlist', 'clist', 'query', 'define',
+           'check_define', 'count']

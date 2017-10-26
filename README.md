@@ -1,7 +1,7 @@
 
 
 <div align="center">
-  <img src="design/logo128.png" alt="加载图片失败：查词在用" title="查词在用">
+  <img src="design/logo128.png" alt="Loading..." title="查词在用">
   <p align="center">
     <a href="https://github.com/ngolin/webdict/blob/master/webdict@latest.crx?raw=true" target="_blank"><img src="https://img.shields.io/badge/download-_lastest_version-blue.svg" download></a>
     <a href="https://chrome.google.com/webstore/detail/webdict/kbiinngndpkahmlokpocicmmcoihhocg" target="_blank"><img src="https://img.shields.io/badge/goto-_chrome_webstore-brightgreen.svg" download></a>
@@ -31,7 +31,7 @@
   英文 · 英美发音
 </h3>
 <div align="center">
-  <img src="design/screenshot.gif" alt="加载动画失败：Dict in Use">
+  <img src="design/screenshot.gif" alt="Loading...">
 </div>
 <p></p>
 <p></p>
@@ -39,7 +39,7 @@
   中文 · 繁简字形
 </h3>
 <div align="center">
-  <img src="design/screenshot-zh.png" alt="加载图片失败：Dict in Use">
+  <img src="design/screenshot-zh.png" alt="Loading...">
 </div>
 
 
@@ -190,11 +190,11 @@ Supported languages:
 
 
 <div align="center">
-  <img src="dist/static/icon48.png" alt="加载图片失败：icon">
-  <img src="dist/static/icon48.png" alt="加载图片失败：icon">
-  <img src="dist/static/icon48.png" alt="加载图片失败：icon">
-  <img src="dist/static/icon48.png" alt="加载图片失败：icon">
-  <img src="dist/static/icon48.png" alt="加载图片失败：icon">
+  <img src="dist/static/icon48.png" alt="Loading...">
+  <img src="dist/static/icon48.png" alt="Loading...">
+  <img src="dist/static/icon48.png" alt="Loading...">
+  <img src="dist/static/icon48.png" alt="Loading...">
+  <img src="dist/static/icon48.png" alt="Loading...">
 </div>
 
 

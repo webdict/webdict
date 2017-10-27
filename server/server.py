@@ -62,6 +62,12 @@ def count():
     return cursor.count()
 
 
+@app.route('/s/json')
+def jsons():
+    '''function docstring'''
+    return json.dumps(cursor.json())
+
+
 @app.route('/s/reset')
 def reset():
     '''function docstring'''

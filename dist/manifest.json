@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "webdict",
   "description": "webdict - Play with Chrome",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Li Hongzhang <paindo@163.com>",
   "browser_action": {
     "default_icon": "static/icon19.png",

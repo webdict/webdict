@@ -1,9 +1,9 @@
 
 
 <div align="center">
-  <img src="design/logo128.png" alt="Loading..." title="查词在用">
+  <img src="static/logo128.png" alt="Loading..." title="查词在用">
   <p align="center">
-    <a href="https://github.com/ngolin/webdict/blob/master/webdict@latest.crx?raw=true" target="_blank"><img src="https://img.shields.io/badge/download-_lastest_version-blue.svg" download></a>
+    <a href="https://github.com/ngolin/webdict/blob/master/webdict-latest.crx?raw=true" target="_blank"><img src="https://img.shields.io/badge/download-_lastest_version-blue.svg" download></a>
     <a href="https://chrome.google.com/webstore/detail/webdict/kbiinngndpkahmlokpocicmmcoihhocg" target="_blank"><img src="https://img.shields.io/badge/goto-_chrome_webstore-brightgreen.svg" download></a>
   </p>
 </div>
@@ -15,7 +15,7 @@
 > 你可能需要先下载安装桌面端的<a href="https://www.baidu.com/s?ie=UTF-8&wd=chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8" target="_blank"> Chrome 浏览器</a>，也就是<a href="https://www.baidu.com/s?ie=UTF-8&wd=%E8%B0%B7%E6%AD%8C%E6%B5%8F%E8%A7%88%E5%99%A8" target="_blank">谷歌浏览器</a>，虽然用它打开本页面。虽然 Chrome 不太好用，我们也不断在找它的替代品，但是八年来一直都没有找到合适的。（如果你找到了更好用的浏览器，请记得告诉我们，:))
 
 
-从 <a href="https://chrome.google.com/webstore/detail/webdict/kbiinngndpkahmlokpocicmmcoihhocg" target="_blank">Chrome 应用商店</a>在线安装，**如果此路不通**，请<a href="https://github.com/ngolin/webdict/blob/master/webdict@latest.crx?raw=true" target="_blank">离线下载</a>，然后再以下步骤本地安装：
+从 <a href="https://chrome.google.com/webstore/detail/webdict/kbiinngndpkahmlokpocicmmcoihhocg" target="_blank">Chrome 应用商店</a>在线安装，**如果此路不通**，请<a href="https://github.com/ngolin/webdict/blob/master/webdict-latest.crx?raw=true" target="_blank">离线下载</a>，然后再以下步骤本地安装：
 
 
 1. 打开 **扩展程序(Extensions)** 页面：
@@ -31,7 +31,7 @@
   英文 · 英美发音
 </h3>
 <div align="center">
-  <img src="design/screenshot.gif" alt="Loading...">
+  <img src="static/screenshot.gif" alt="Loading...">
 </div>
 <p></p>
 <p></p>
@@ -39,7 +39,7 @@
   中文 · 繁简字形
 </h3>
 <div align="center">
-  <img src="design/screenshot-zh.png" alt="Loading...">
+  <img src="static/screenshot-zh.png" alt="Loading...">
 </div>
 
 
@@ -56,7 +56,7 @@ IMPORTANT:
 
 
 <div align="center">
-  <img src="design/small_tile.png" title="Promotional tile image">
+  <img src="static/small_tile.png" title="Promotional tile image">
 </div>
 
 
@@ -118,7 +118,7 @@ Supported languages:
 #### 第四部分
 
 
-&emsp;&emsp;`design/`包含本项目的平面设计原文件，以及本 repo 文档所需的静态图片。
+&emsp;&emsp;`static/`包含本项目的平面设计原文件，以及本 repo 文档所需的静态图片。
 
 #### 第五部分
 
@@ -165,7 +165,7 @@ Supported languages:
 
 
 1. 为保存的笔记添加编辑功能，之后再加入 Markdown 语法支持，再同步到手机端阅读
-2. 重新设计 ICON(`design/icon.ai`)、Logo(`design/logo.ai`)和截屏(`design/dict-in-use.psd`)
+2. 重新设计 ICON(`static/icon.ai`)、Logo(`static/logo.ai`)和截屏(`static/dict-in-use.psd`)
 3. 注册域名，提供一个网页让每位人向服务器数据库插入新词条及其发音
 
 

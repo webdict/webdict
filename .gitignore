@@ -3,9 +3,10 @@
 /dist/*.js
 
 /design/*
-!/design/*.png
-!/design/*.jpg
-!/design/*.gif
+/static/*
+!/static/*.png
+!/static/*.jpg
+!/static/*.gif
 
 /src/*
 !/src/background
@@ -15,6 +16,7 @@
 !/src/shared
 !/src/vocabulary
 
+/gulp/**/*.ts
 /src/**/*.js
 
 /server/*

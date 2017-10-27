@@ -39,7 +39,7 @@ namespace Dict {
     '#pron-us': 'box-sizing:border-box;color:#8f0610;cursor:pointer;display:inline;font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.125;text-align:center;user-select:none;z-index:100000',
     '#ngl-head': 'box-sizing:border-box;color:#222;cursor:pointer;display:inline-block;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;line-height:1.125;padding-bottom:6px;text-align:center;user-select:none;z-index:100000',
   };
-  let html: any = '<div id="ngl-main"><div id="ngl-show"><span id="header"><span id="ngl-word"></span><svg id="ngl-hide" viewBox="0 0 24 24"><circle fill="#000000" cx="12" cy="12" r="8"/><path fill="#FFF1E0" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg></span><span id="ngl-tran"></span><div id="ngl-pron"></div><a id="ngl-link" target="_blank"></a></div><div id="ngl-edit"><div id="ngl-head" title="取消"></div><textarea id="ngl-input"></textarea><div id="ngl-done">完成</div></div><div id="ngl-next"></div></div><div id="ngl-blayer"></div><div id="ngl-tlayer"></div>';
+  let html: any = '<div id="ngl-main"><div id="ngl-show"><span id="header"><span id="ngl-word"></span><svg id="ngl-hide" viewBox="0 0 100 100"><circle fill="#FFF1E0" cx="50" cy="50" r="42"/><path fill="#8f0610" d="M71,34.921l-5.922-5.92L50.001,44.079L34.921,29L29,34.921L44.08,50L29,65.08L34.921,71l15.08-15.078L65.079,71L71,65.078L55.922,50L71,34.921z"/></svg></span><span id="ngl-tran"></span><div id="ngl-pron"></div><a id="ngl-link" target="_blank"></a></div><div id="ngl-edit"><div id="ngl-head" title="取消"></div><textarea id="ngl-input"></textarea><div id="ngl-done">完成</div></div><div id="ngl-next"></div></div><div id="ngl-blayer"></div><div id="ngl-tlayer"></div>';
   export const dict = document.createElement('div');
   dict.setAttribute('style', styles['#origin']);
   dict.style.display = 'none';
@@ -64,15 +64,15 @@ namespace Dict {
     dict.style.display = 'none';
     handler({ action: Action.userClosed });
   }, true);
-  const mock = hide.getElementsByTagNameNS('http://www.w3.org/2000/svg', 'circle')[0];
-  const mark = hide.getElementsByTagNameNS('http://www.w3.org/2000/svg', 'path')[0];
+  const back = hide.getElementsByTagNameNS('http://www.w3.org/2000/svg', 'circle')[0];
+  const arch = hide.getElementsByTagNameNS('http://www.w3.org/2000/svg', 'path')[0];
   hide.onmouseover = () => {
-    mark.setAttribute('fill', word.style.color as string);
-    mock.setAttribute('fill', main.style.backgroundColor as string);
+    back.setAttribute('fill', word.style.color as string);
+    arch.setAttribute('fill', main.style.backgroundColor as string);
   };
   hide.onmouseout = () => {
-    mark.setAttribute('fill', main.style.backgroundColor as string);
-    mock.setAttribute('fill', word.style.color as string);
+    back.setAttribute('fill', main.style.backgroundColor as string);
+    arch.setAttribute('fill', word.style.color as string);
   };
   word.addEventListener('click', (event) => {
     event.stopPropagation();
@@ -116,7 +116,7 @@ namespace Dict {
     show.style.display = 'block';
     edit.style.display = 'none';
     event.stopPropagation();
-    const newVal = (input as HTMLTextAreaElement).value.trim();
+    const newVal = ((input as HTMLTextAreaElement).value || '').trim().replace(/\s\s+|[\n\r\t]/g, ' ');
     if (newVal && newVal !== rentry.trans) {
       if (newVal.charAt(0) !== '@' || rentry.qword.toLowerCase() === newVal.substr(1).toLowerCase()) {
         rentry.trans = newVal.charAt(0) !== '@' ? newVal : '[Ref Error]';
@@ -195,10 +195,10 @@ namespace Dict {
     }
     return divs;
   }
-  const setButton = (button: HTMLSpanElement, style: string) => {
+  const setButton = (button: HTMLSpanElement, style: string, mark: string) => {
     button.setAttribute('style', style);
     button.addEventListener('mouseup', playAudio, true);
-    button.setAttribute('title', '播放 » [' + button.innerText + ']');
+    button.setAttribute('title', '播放' + mark + ' » [' + button.innerText + ']');
   };
 
 
@@ -216,10 +216,10 @@ namespace Dict {
       head.innerText = word.innerText = entry.qword;
       if (entry.family && entry.family.length > 1) {
         done.style.color = head.style.color = word.style.color = '#8f0610';
-        mock.setAttribute('fill', '#8f0610');
+        arch.setAttribute('fill', '#8f0610');
       } else {
         done.style.color = head.style.color = word.style.color = '#07255e';
-        mock.setAttribute('fill', '#07255e');
+        arch.setAttribute('fill', '#07255e');
       }
       if (entry.count) word.setAttribute('title', '第' + entry.count + '次查询');
       else word.removeAttribute('title');
@@ -247,7 +247,7 @@ namespace Dict {
           const buttons = span.querySelectorAll('span[data-url]') as NodeListOf<HTMLSpanElement>;
           // tslint:disable-next-line: prefer-for-of
           for (let b = 0; b < buttons.length; b++) {
-            setButton(buttons[b], attrs[p]);
+            setButton(buttons[b], attrs[p], entry.cleng ? '拼音' : (p === 0 ? '英式' : '美式'));
           }
         }
       });

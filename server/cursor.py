@@ -6,7 +6,8 @@ from counter import Counter
 con = sqlite3.connect('vocab.db')
 cur = con.cursor()
 
-count = Counter()
+counter = Counter()
+
 
 def clist(text: str):
     res = cur.execute(
@@ -61,8 +62,8 @@ def query(word: str, cleng: bool):
     data = {'trans': trans} if trans else dict()
     sql = "SELECT pinvin FROM pinv_table WHERE word = '%s'" % word if cleng else "SELECT pronuk, pos, pronus FROM pron_table WHERE word COLLATE NOCASE = '%s'" % word
     res = cur.execute(sql)
-    count.update()
-    data['count'] = count.count
+    counter.update()
+    data['count'] = counter.count
     if cleng:
         data['poses'] = [pinvin(res.fetchone()[0])]
         return data
@@ -86,11 +87,18 @@ def define(word: str, tran: str):
         cur.execute(
             "INSERT OR REPLACE INTO defin_table(word, defin) VALUES('%s', '%s')" % (word, tran))
 
+
 def count():
-    return count.html()
+    return counter.html()
+
 
 def reset():
-    count.reset()
+    counter.reset()
+
+
+def json():
+    return {'count': counter.count, 'stamp': round(counter.time)}
+
 
 __all__ = ['wlist', 'clist', 'query', 'define',
-           'check_define', 'count']
+           'check_define', 'count','json']

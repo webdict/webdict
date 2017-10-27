@@ -26,6 +26,7 @@
     "downlevel",
     "emsp",
     "forin",
+    "gtag",
     "gulplog",
     "hongzhang",
     "ipal",
@@ -45,6 +46,7 @@
     "repo",
     "ruan",
     "screenshot",
+    "seemlessly",
     "tlay",
     "tlayer",
     "tran",
@@ -53,6 +55,7 @@
     "tsify",
     "vocab",
     "webdict",
-    "wlist"
+    "wlist",
+    "wsgi"
   ]
 }

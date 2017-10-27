@@ -21,22 +21,25 @@ function resolveFromServer(entry: ServerEntry, qword: string) {
       }
       (entry as Entry).index = 0;
     }
-  } else if (entry.family) {
+  } else {
+    entry.poses.sort((i1, i2) => i1.split('$$')[1].toLowerCase() > i2.split('$$')[1].toLowerCase() ? 1 : -1);
+    if (entry.family) {
+      if (entry.family[0] === entry.qword) {
+        const family: string[] = [];
+        const set: { [key: string]: boolean } = {};
+        for (const form of entry.family as string[]) {
+          if (set[form.toLowerCase()]) continue;
+          set[form.toLowerCase()] = true;
+          family.push(form);
+        }
+        if (family.length <= 1) delete entry.family;
+        else {
+          entry.family = family.sort((a, b) => b.length - a.length);
+          (entry as Entry).index = entry.family.indexOf(entry.qword);
+        }
+      } else (entry as Entry).index = entry.family.length - 1;
 
-    if (entry.family[0] === entry.qword) {
-      const family: string[] = [];
-      const set: { [key: string]: boolean } = {};
-      for (const form of entry.family as string[]) {
-        if (set[form.toLowerCase()]) continue;
-        set[form.toLowerCase()] = true;
-        family.push(form);
-      }
-      if (family.length <= 1) delete entry.family;
-      else {
-        entry.family = family.sort((a, b) => b.length - a.length);
-        (entry as Entry).index = entry.family.indexOf(entry.qword);
-      }
-    } else (entry as Entry).index = entry.family.length - 1;
+    }
 
   }
   entry.trans = entry.trans && trans.add(entry.qword!, entry.trans) || '[Not Found]';
@@ -68,6 +71,7 @@ export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry 
             baseEntry.qword = qword;
             baseEntry.trans = baseEntry.trans && trans.add(qword, baseEntry.trans) || '[Not Found]';
             if (lang === 'zh') baseEntry.cleng = qword.length;
+            else baseEntry.poses.sort((i1, i2) => i1.split('$$')[1].toLowerCase() > i2.split('$$')[1].toLowerCase() ? 1 : -1);
             mapSize++;
             consume(map[qword] = baseEntry);
             gtag('lookup', { qword });

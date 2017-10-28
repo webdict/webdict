@@ -12,7 +12,7 @@
 ## 马上使用
 
 
-> 你可能需要先下载安装桌面端的<a href="https://www.baidu.com/s?ie=UTF-8&wd=chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8" target="_blank"> Chrome 浏览器</a>，也就是<a href="https://www.baidu.com/s?ie=UTF-8&wd=%E8%B0%B7%E6%AD%8C%E6%B5%8F%E8%A7%88%E5%99%A8" target="_blank">谷歌浏览器</a>，虽然用它打开本页面。虽然 Chrome 不太好用，我们也不断在找它的替代品，但是八年来一直都没有找到合适的。（如果你找到了更好用的浏览器，请记得告诉我们，:))
+> 你可能需要先下载安装桌面端的<a href="https://www.baidu.com/s?ie=UTF-8&wd=chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8" target="_blank"> Chrome 浏览器</a>，然后再用它打开本页面。即将支持 **FireFox 浏览器**。
 
 
 从 <a href="https://chrome.google.com/webstore/detail/webdict/kbiinngndpkahmlokpocicmmcoihhocg" target="_blank">Chrome 应用商店</a>在线安装，**如果此路不通**，请<a href="https://github.com/ngolin/webdict/blob/master/webdict-latest.crx?raw=true" target="_blank">离线下载</a>，然后再以下步骤本地安装：
@@ -36,7 +36,7 @@
 <p></p>
 <p></p>
 <h3 align="center" style="color:#8f0610">
-  中文 · 繁简字形
+  中文 · 繁简字体
 </h3>
 <div align="center">
   <img src="static/screenshot-zh.png" alt="Loading...">
@@ -44,6 +44,12 @@
 
 
 ## 历史版本
+
+### `1.0.1`
+
+1. Bug fixes.
+2. Some other changes you won't notice.
+
 
 ### `1.0.0`
 View definitions and play sounds of new words seemlessly as you browse the web.

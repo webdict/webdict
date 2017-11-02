@@ -4,8 +4,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var trans = require("./trans");
 var gtag_1 = require("./gtag");
-var Q_URL = '//120.78.146.219/q/';
-var F_URL = '//120.78.146.219/f/';
+var Q_URL = 'http://120.78.146.219/q/';
+var F_URL = 'http://120.78.146.219/f/';
 var VERSION = '1';
 function resolveFromServer(entry, qword) {
     if (entry.cleng) {
@@ -167,9 +167,9 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var gtag_1 = require("./gtag");
-var ZH_URL = '//120.78.146.219/static/pron/zh/';
-var UK_URL = '//120.78.146.219/static/pron/uk/';
-var US_URL = '//120.78.146.219/static/pron/us/';
+var ZH_URL = 'http://120.78.146.219/static/pron/zh/';
+var UK_URL = 'http://120.78.146.219/static/pron/uk/';
+var US_URL = 'http://120.78.146.219/static/pron/us/';
 var map = Object.create(null);
 function play(id, onerror) {
     var oldAudio = map[id];
@@ -210,8 +210,8 @@ exports.default = play;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var D_URL = '//120.78.146.219/d/';
-var P_URL = '//120.78.146.219/definition';
+var D_URL = 'http://120.78.146.219/d/';
+var P_URL = 'http://120.78.146.219/definition';
 var trans = Object.create(null);
 var older = Object.create(null);
 function add(key, value) {

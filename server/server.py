@@ -7,16 +7,18 @@ import cursor
 # pylint: disable=C0103
 app = Flask(__name__)
 
+headers = {'Access-Control-Allow-Origin': '*'}
+
 
 @app.route('/q/<text>')
 def query(text: str):
     '''function docstring'''
     if "'" in text or text[1:3] not in ('zh', 'en'):
-        return ''
+        return '', headers
     han = text[1:3] == 'zh'
     unit = cursor.clist(text[3:]) if han else cursor.wlist(text[3:])
     if not unit:
-        return ''
+        return '', headers
     wlist, qword = unit
     data = cursor.query(qword, han)
     if len(wlist) > 1:
@@ -25,7 +27,7 @@ def query(text: str):
         data['cleng'] = len(qword)
     else:
         data['qword'] = qword
-    return json.dumps(data)
+    return json.dumps(data), headers
 
 
 @app.route('/f/<text>')
@@ -33,8 +35,8 @@ def form(text: str):
     '''function docstring'''
     word, lang = text[2:], text[:2]
     if "'" in word or lang not in ('zh', 'en'):
-        return ''
-    return json.dumps(cursor.query(word, lang == 'zh'))
+        return '', headers
+    return json.dumps(cursor.query(word, lang == 'zh')), headers
 
 
 @app.route('/m/<text>')
@@ -52,8 +54,8 @@ def modify(text: str):
 def define(text: str):
     '''function docstring'''
     if not text.startswith('@') or "'" in text:
-        return ''
-    return cursor.check_define(text, set())
+        return '', headers
+    return cursor.check_define(text, set()), headers
 
 
 @app.route('/s/count')

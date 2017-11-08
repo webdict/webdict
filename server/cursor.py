@@ -19,11 +19,11 @@ def clist(text: str):
     for i in range(len(text), 0, -1):
         if (text[:i],) in ser:
             l.append(text[:i])
-    return l, l[0] if l else None
+    return (l, l[0]) if l else None
 
 
 def wlist(text: str):
-    text = text[:text.index(' ')] if ' 'in text else text
+    text = text[:text.index(' ')] if ' ' in text else text
     l = family(text)
     if l:
         return l, l[-1]
@@ -35,7 +35,7 @@ def wlist(text: str):
     for word in l:
         if word and (word.lower(),) in ser:
             ls.append(word)
-    return ls, ls[0] if ls else None
+    return (ls, ls[0]) if ls else None
 
 
 def defin(word: str):
@@ -101,4 +101,4 @@ def json():
 
 
 __all__ = ['wlist', 'clist', 'query', 'define',
-           'check_define', 'count','json']
+           'check_define', 'count', 'json']

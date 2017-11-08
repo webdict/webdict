@@ -5,12 +5,20 @@ const US_URL = '__DOMAIN_HOLDER__/static/pron/us/';
 
 
 const map: { [id: string]: HTMLAudioElement | undefined } = Object.create(null);
-
-export function play(id: string, tabId: number | undefined) {
+/**
+ * `id` formats:
+ * 
+ * 1. `zh:pin1.ogg`
+ * 2. `uk:C7IZLO-RJ.mp3`
+ * 3. `us:F7I-NLO-KJ.mp3`
+ * 
+ * `onerror` when playing failed.
+ */
+export default function play(id: string, onerror: (id: string) => void) {
   const oldAudio = map[id];
   if (oldAudio) {
     if (oldAudio.getAttribute('disabled')) {
-      if (tabId !== undefined) chrome.tabs.sendMessage(tabId, id);
+      if (onerror) onerror(id);
     } else {
       oldAudio.play();
     }
@@ -29,7 +37,7 @@ export function play(id: string, tabId: number | undefined) {
     newAudio.onerror = (event: ErrorEvent) => {
       event.stopPropagation();
       newAudio.setAttribute('disabled', 'disabled');
-      if (tabId !== undefined) chrome.tabs.sendMessage(tabId, id);
+      if (onerror) onerror(id);
       gtag('play_error', { id });
     };
   }

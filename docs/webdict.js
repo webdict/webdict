@@ -4,8 +4,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var trans = require("./trans");
 var gtag_1 = require("./gtag");
-var Q_URL = 'http://120.78.146.219/q/';
-var F_URL = 'http://120.78.146.219/f/';
+var Q_URL = 'http://127.0.0.1:5000/q/';
+var F_URL = 'http://127.0.0.1:5000/f/';
 var VERSION = '1';
 function resolveFromServer(entry, qword) {
     if (entry.cleng) {
@@ -105,7 +105,7 @@ function query(qword, lang, consume) {
         var _xhr = new XMLHttpRequest();
         _xhr.open('GET', Q_URL + encodeURIComponent(VERSION + lang + qword), async);
         _xhr.onreadystatechange = function () {
-            if (_xhr.readyState === 4 && _xhr.responseText) {
+            if (_xhr.readyState === 4 && _xhr.responseText.trim()) {
                 var response = JSON.parse(_xhr.responseText);
                 if (response.next) consume(response);else {
                     var newEntry = resolveFromServer(response, qword);
@@ -167,15 +167,15 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var gtag_1 = require("./gtag");
-var ZH_URL = 'http://120.78.146.219/static/pron/zh/';
-var UK_URL = 'http://120.78.146.219/static/pron/uk/';
-var US_URL = 'http://120.78.146.219/static/pron/us/';
+var ZH_URL = 'http://127.0.0.1:5000/static/pron/zh/';
+var UK_URL = 'http://127.0.0.1:5000/static/pron/uk/';
+var US_URL = 'http://127.0.0.1:5000/static/pron/us/';
 var map = Object.create(null);
 function play(id, onerror) {
     var oldAudio = map[id];
     if (oldAudio) {
         if (oldAudio.getAttribute('disabled')) {
-            if (onerror !== undefined) onerror(id);
+            if (onerror) onerror(id);
         } else {
             oldAudio.play();
         }
@@ -199,7 +199,7 @@ function play(id, onerror) {
         newAudio.onerror = function (event) {
             event.stopPropagation();
             newAudio.setAttribute('disabled', 'disabled');
-            if (onerror !== undefined) onerror(id);
+            if (onerror) onerror(id);
             gtag_1.default('play_error', { id: id });
         };
     }
@@ -210,8 +210,8 @@ exports.default = play;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var D_URL = 'http://120.78.146.219/d/';
-var P_URL = 'http://120.78.146.219/definition';
+var D_URL = 'http://127.0.0.1:5000/d/';
+var P_URL = 'http://127.0.0.1:5000/definition';
 var trans = Object.create(null);
 var older = Object.create(null);
 function add(key, value) {
@@ -414,6 +414,7 @@ function default_1(injector, handler) {
         try {
             var sel = window.getSelection();
             var text = utility_1.shorten(sel && sel.toString().trim());
+            console.log(text);
             var rect = sel.getRangeAt(0).getBoundingClientRect();
             if (text && rect.left >= 0 && rect.right <= document.documentElement.clientWidth) {
                 if (utility_1.staticText(sel.anchorNode)) {
@@ -423,7 +424,7 @@ function default_1(injector, handler) {
                 }
             }
         } catch (_a) {}
-        return [null, null];
+        return ['', null];
     }
     var input = Dict.input;
     document.addEventListener('mousedown', function (event) {
@@ -929,11 +930,7 @@ exports.removeStorage = removeStorage;
 Object.defineProperty(exports, "__esModule", { value: true });
 var popdict_1 = require("./popdict");
 popdict_1.default(function (action) {
-    switch (action.action) {
-        case 10:
-            console.log('zh queried');
-            break;
-    }
+    console.log(action.action);
 });
 
 },{"./popdict":11}],11:[function(require,module,exports){

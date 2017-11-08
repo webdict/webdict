@@ -43,19 +43,23 @@ function of(key) {
   }
 }
 const main = 'main.ts';
+const index = 'index.ts';
 const src = './src';
 const version = '1';
 
 const dirs = fs.readdirSync(src).filter(
-  (dir) => fs.statSync(path.join(src, dir)).isDirectory() && fs.existsSync(path.join(src, dir, main))
+  (dir) => fs.statSync(path.join(src, dir)).isDirectory() && (fs.existsSync(path.join(src, dir, main)) || fs.existsSync(path.join(src, dir, index)))
 );
 
 dirs.forEach((dir) => {
+  const b = fs.existsSync(path.join(src, dir, main));
+  const f = b ? main : index;
+  const t = b ? 'dist' : 'docs';
   gulp.task(dir, () => {
     return browserify({
         basedir: '.',
         debug: false,
-        entries: [path.join(src, dir, main)],
+        entries: [path.join(src, dir, f)],
         cache: {},
         packageCache: {}
       })
@@ -68,11 +72,11 @@ dirs.forEach((dir) => {
       .pipe(source(dir + '.js'))
       .pipe(buffer())
       // .pipe(sourcemaps.init({loadMaps: true}))
-      .pipe(uglify())
+      // .pipe(uglify())
       // .pipe(sourcemaps.write('./'))
       .pipe(replace('__DOMAIN_HOLDER__', of('url')))
       .pipe(replace('__VERSION_HOLDER__', version))
-      .pipe(gulp.dest('dist'));
+      .pipe(gulp.dest(t));
   });
 });
 

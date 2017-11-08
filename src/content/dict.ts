@@ -1,16 +1,9 @@
-// import { updateStorage } from '../shared/storage';
-import { Action, Rect, Injector } from '../shared/typings';
-import inject from './dict';
-// import { dePinv, dePron } from './coder';
-import { shorten, staticText } from './utility';
+import { updateStorage } from '../shared/storage';
+import { Entry, Action, Rect, Injector } from '../shared/typings';
+import { dePinv, dePron } from './coder';
+// import { shorten, staticText } from './utility';
 
-/*
-function handler(action: { 'action': Action }) {
-  // TODO: react to actions...
-  action.action;
-}
-
-namespace Dict {
+export default function (injector: Injector, handler: (data: { action: Action }) => void) {
   let rentry: Entry;
   let absoluteRect: Rect;
   let styles: any = {
@@ -36,13 +29,13 @@ namespace Dict {
     '#ngl-head': 'box-sizing:border-box;color:#222;cursor:pointer;display:inline-block;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;line-height:1.125;padding-bottom:6px;text-align:center;user-select:none;z-index:100000',
   };
   let html: any = '<div id="ngl-main"><div id="ngl-show"><span id="header"><span id="ngl-word"></span><svg id="ngl-hide" viewBox="0 0 100 100"><circle fill="#FFF1E0" cx="50" cy="50" r="42"/><path fill="#8f0610" d="M71,34.921l-5.922-5.92L50.001,44.079L34.921,29L29,34.921L44.08,50L29,65.08L34.921,71l15.08-15.078L65.079,71L71,65.078L55.922,50L71,34.921z"/></svg></span><span id="ngl-tran"></span><div id="ngl-pron"></div><a id="ngl-link" target="_blank"></a></div><div id="ngl-edit"><div id="ngl-head" title="取消"></div><textarea id="ngl-input"></textarea><div id="ngl-done">完成</div></div><div id="ngl-next"></div></div><div id="ngl-blayer"></div><div id="ngl-tlayer"></div>';
-  export const dict = document.createElement('div');
+  /*export*/ const dict = document.createElement('div');
   dict.setAttribute('style', styles['#origin']);
   dict.style.display = 'none';
   document.body.appendChild(dict);
   dict.innerHTML = html;
   html = null;
-  export const [main, show, word, hide, tran, pron, link, edit, head, input, done, next, blay, tlay]
+  /*export*/ const [main, show, word, hide, tran, pron, link, edit, head, input, done, next, blay, tlay]
     = ['main', 'show', 'word', 'hide', 'tran', 'pron', 'link', 'edit', 'head', 'input', 'done', 'next', 'blayer', 'tlayer']
       .map((id) => dict.querySelector('#ngl-' + id) as HTMLElement);
   // tslint:disable-next-line forin
@@ -74,13 +67,13 @@ namespace Dict {
     event.stopPropagation();
     if (rentry.family && rentry.family.length > 1) {
       const qword = rentry.family[(++rentry.index) % rentry.family.length];
-      chrome.runtime.sendMessage({ query: qword, lang: rentry.cleng ? 'zh' : 'en' }, (entry: Entry) => {
+      /*chrome.runtime.sendMessage*/injector.query({ query: qword, lang: rentry.cleng ? 'zh' : 'en' }, (entry: Entry) => {
         if (entry) {
           entry.family = rentry.family;
           entry.index = rentry.index;
           showDict(entry, absoluteRect);
+          handler({ action: Action.familyQueried });
         }
-        return false;
       });
     }
   });
@@ -118,13 +111,17 @@ namespace Dict {
         rentry.trans = newVal.charAt(0) !== '@' ? newVal : '[Ref Error]';
         updateContent(rentry);
         pinpoint(absoluteRect);
-        chrome.runtime.sendMessage({ query: rentry.qword, newVal });
+        injector.post({ query: rentry.qword, newVal });
+        // chrome.runtime.sendMessage({ query: rentry.qword, newVal });
+        handler({ action: Action.applyDef });
       } else {
-        chrome.runtime.sendMessage({ query: rentry.qword, newVal }, (trans: string) => {
+
+        /*chrome.runtime.sendMessage*/injector.post({ query: rentry.qword, newVal }, (trans: string) => {
           rentry.trans = trans;
           updateContent(rentry);
           pinpoint(absoluteRect);
         });
+        handler({ action: Action.applyAtDef });
       }
     } else pinpoint(absoluteRect);
   };
@@ -147,16 +144,24 @@ namespace Dict {
   function playAudio(event: Event) {
     event.stopPropagation();
     const el = event.target as HTMLElement;
-    chrome.runtime.sendMessage({ play: el.getAttribute('data-url') });
-    handler({ action: Action.tryToPlayAudio });
+    const play = el.getAttribute('data-url') as string;
+    injector.play({ play });
+    // chrome.runtime.sendMessage({ play: el.getAttribute('data-url') });
+    if (play.startsWith('zh')) {
+      handler({ action: Action.playAudioZH });
+    } else if (play.startsWith('uk')) {
+      handler({ action: Action.playAudioUK });
+    } else {
+      handler({ action: Action.playAudioUS });
+    }
   }
 
   // on audio playing failed:
-  chrome.runtime.onMessage.addListener((msg: { 'play': string }) => {
-    const target = pron.querySelector(`[data-url="${msg.play}"]`) as HTMLElement;
+  injector.onplayerror = (id: string) => {
+    const target = pron.querySelector(`[data-url="${id}"]`) as HTMLElement;
     if (target) target.style.textDecoration = 'line-through';
-    handler({ action: Action.failToPlayAudio });
-  });
+    handler({ action: Action.playAudioFailed });
+  };
 
 
   function ensurePronItem(pron: HTMLElement, count: number) {
@@ -317,14 +322,16 @@ namespace Dict {
     return pinpoint(rect);
   }
 
-  export function hideDict() {
+  /*export*/ function hideDict() {
     dict.style.display = 'none';
     handler({ action: Action.userClosed });
   }
 
-  export function tryToShowDict(text: string, rect: Rect) {
+  /*export*/ function tryToShowDict(text: string, rect: Rect) {
     const qword = text.substr(2);
-    chrome.runtime.sendMessage({ query: qword, lang: text.substr(0, 2) }, (entry: Entry) => {
+    const lang = text.substr(0, 2);
+
+    /*chrome.runtime.sendMessage*/injector.query({ query: qword, lang: lang as 'zh' | 'en' }, (entry: Entry) => {
       if (entry) {
         absoluteRect = rect;
         if (showDict(entry, rect)) {
@@ -333,57 +340,11 @@ namespace Dict {
             item.moment = Date.now();
             save(item);
           });
+          handler({ action: lang === 'zh' ? Action.zhQueried : Action.enQueried });
         }
       }
     });
   }
+
+  return {/* dict, main, show, word, hide, tran, pron, link, edit, head, */input/*, done, next, blay, tlay*/, hideDict, tryToShowDict };
 }
-*/
-
-
-
-export default function (injector: Injector, handler: (data: { action: Action }) => void) {
-
-  const Dict = inject(injector, handler);
-
-  let mouseupEnabled = true;
-  let dictEnabled = true;
-  let mousedownTargetIsInput = false;
-  function capture(): [string | null, Rect | null] {
-    try {
-      const sel = window.getSelection();
-      const text = shorten(sel && sel.toString().trim());
-      const rect = sel.getRangeAt(0).getBoundingClientRect();
-      if (text && rect.left >= 0 && rect.right <= document.documentElement.clientWidth) {
-        if (staticText(sel.anchorNode)) {
-          const x = window.pageXOffset, y = window.pageYOffset;
-          return [text, { left: rect.left + x, right: rect.right + x, bottom: rect.bottom + y, top: rect.top + y }];
-        }
-      }
-    } catch { }
-    return ['', null];
-  }
-  const input = Dict.input;
-
-  document.addEventListener('mousedown', (event: Event) => {
-    mouseupEnabled = dictEnabled && staticText(event.target);
-    mousedownTargetIsInput = event.target === input;
-  }, true);
-  document.addEventListener('mouseup', (event) => {
-    if (mousedownTargetIsInput) return;
-    if (mouseupEnabled && staticText(event.target)) {
-      if (event.target !== document) {
-        const [text, rect] = capture();
-        if (text) {
-          Dict.tryToShowDict(text, rect as Rect);
-        } else Dict.hideDict();
-      }
-    } else Dict.hideDict();
-  });
-
-  return function (enable: boolean) {
-    dictEnabled = enable;
-  };
-
-}
-

@@ -17,7 +17,7 @@ export function get(key: string, value?: string): string | undefined {
   return (value = trans[key.toLowerCase()] || value) && (value.charAt(0) !== '@' ? value : get(value.substr(1)));
 }
 
-export function set(key: string, value: string, consume: (newVal: string) => void): void {
+export function set(key: string, value: string, consume: (newVal: string) => void, async = false): void {
   key = key.toLowerCase();
   if (!older[key]) older[key] = trans[key];
   if (value.charAt(0) !== '@') {
@@ -32,7 +32,7 @@ export function set(key: string, value: string, consume: (newVal: string) => voi
       consume(val);
     } else {
       const xhr = new XMLHttpRequest();
-      xhr.open('GET', D_URL + encodeURIComponent(value), false);
+      xhr.open('GET', D_URL + encodeURIComponent(value), async);
       xhr.onload = () => {
         if (xhr.responseText) {
           trans[key] = value;
@@ -49,9 +49,12 @@ export function set(key: string, value: string, consume: (newVal: string) => voi
   }
 }
 
-
-chrome.windows.onRemoved.addListener(post);
-chrome.tabs.onRemoved.addListener(post);
+if (chrome && chrome.windows && chrome.tabs) {
+  try {
+    chrome.windows.onRemoved.addListener(post);
+    chrome.tabs.onRemoved.addListener(post);
+  } catch{ }
+}
 
 
 

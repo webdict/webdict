@@ -1,20 +1,25 @@
 
 
-import { play } from './player';
+import play from './player';
 
-import { applyDefine, query } from './entry';
+import { post, query } from './entry';
 
 chrome.runtime.onMessage.addListener((msg: { 'play': string, 'query': string, 'lang': 'zh' | 'en', 'newVal': string }, sender, sendRes) => {
-  if (msg.play) play(msg.play, sender.tab && sender.tab.id);
-  else if (msg.lang) {
+  if (msg.play) {
+    const tabId = sender.tab && sender.tab.id;
+    play(msg.play, (id) => {
+      chrome.tabs.sendMessage(tabId as number, id);
+    });
+  } else if (msg.lang) {
     query(msg.query, msg.lang, sendRes as (all: any) => void);
     return true;
   } else if (msg.newVal) {
-    applyDefine(msg.query, msg.newVal, sendRes as (newVal: string) => void);
+    post(msg.query, msg.newVal, sendRes as (newVal: string) => void);
     return true;
   }
   return false;
 });
+
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (tab && tab.id) {

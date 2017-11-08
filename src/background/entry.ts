@@ -1,3 +1,9 @@
+import * as trans from './trans';
+import { Entry, ServerEntry } from '../shared/typings';
+import gtag from './gtag';
+
+
+
 const Q_URL = '__DOMAIN_HOLDER__/q/';
 // const M_URL = '__DOMAIN_HOLDER__/m/';
 const F_URL = '__DOMAIN_HOLDER__/f/';
@@ -6,10 +12,7 @@ const F_URL = '__DOMAIN_HOLDER__/f/';
 
 const VERSION = '__VERSION_HOLDER__';
 
-import * as trans from './trans';
 
-import { Entry, ServerEntry } from '../shared/typings';
-import gtag from './gtag';
 function resolveFromServer(entry: ServerEntry, qword: string) {
   if (entry.cleng) {
     entry.qword = qword.substr(0, entry.cleng);
@@ -53,7 +56,7 @@ const map: { [qword: string]: Entry } = Object.create(null);
 let mapSize = 0;
 
 
-export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry | undefined) => void) {
+export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry | undefined) => void, async = false) {
   const entry = map[qword] as Entry;
   if (entry) {
     if (entry !== EMPTY) {
@@ -62,7 +65,7 @@ export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry 
       gtag('lookup', { qword: entry.qword });
     } else {
       const xhr = new XMLHttpRequest();
-      xhr.open('GET', F_URL + encodeURIComponent(lang + qword), false);
+      xhr.open('GET', F_URL + encodeURIComponent(lang + qword), async);
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.responseText) {
           const baseEntry = JSON.parse(xhr.responseText) as Entry;
@@ -83,9 +86,9 @@ export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry 
     }
   } else {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', Q_URL + encodeURIComponent(VERSION + lang + qword), false);
+    xhr.open('GET', Q_URL + encodeURIComponent(VERSION + lang + qword), async);
     xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4 && xhr.responseText) {
+      if (xhr.readyState === 4 && xhr.responseText.trim()) {
         const response = JSON.parse(xhr.responseText) as ServerEntry;
         if (response.next) consume(response as Entry);
         else {
@@ -109,4 +112,4 @@ export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry 
   }
 }
 
-export const applyDefine = trans.set;
+export const post = trans.set;

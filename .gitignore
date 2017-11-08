@@ -33,10 +33,14 @@
 
 /**/test.*
 
-/**/*.d.md
 /**/*.cmd
 /**/*.pem
 /**/*.ppk
 /**/*.sh
+
+/src/webdict
+
+/**/*.md
+!/**/README.md
 
 dist.crx

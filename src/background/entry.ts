@@ -53,7 +53,7 @@ const EMPTY = Object.create(null);
 
 const map: { [qword: string]: Entry } = Object.create(null);
 
-let mapSize = 0;
+// let mapSize = 0;
 
 
 export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry | undefined) => void, async = false) {
@@ -75,7 +75,7 @@ export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry 
             baseEntry.trans = baseEntry.trans && trans.add(qword, baseEntry.trans) || '[Not Found]';
             if (lang === 'zh') baseEntry.cleng = qword.length;
             else baseEntry.poses.sort((i1, i2) => i1.split('$$')[1].toLowerCase() > i2.split('$$')[1].toLowerCase() ? 1 : -1);
-            mapSize++;
+            // mapSize++;
             consume(map[qword] = baseEntry);
             gtag('lookup', { qword });
           }
@@ -98,7 +98,8 @@ export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry 
               map[form] = EMPTY;
             }
           }
-          mapSize++;
+          // mapSize++;
+          console.log(JSON.stringify(newEntry));
           consume(map[newEntry.qword] = newEntry);
           gtag('lookup', { qword: newEntry.qword });
         }

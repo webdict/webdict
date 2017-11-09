@@ -16,7 +16,7 @@ export interface ServerEntry extends BaseEntry {
 
 export interface Entry extends ServerEntry {
   family?: string[];
-  index: number;
+  index?: number;
   trans: string;
   qword: string;
 }

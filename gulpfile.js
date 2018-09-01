@@ -34,6 +34,7 @@ function ofUrl(value) {
   }
 }
 
+
 function of(key) {
   switch (key) {
     case 'url':
@@ -42,6 +43,7 @@ function of(key) {
       throw `'${key}' not defined`;
   }
 }
+
 const main = 'main.ts';
 const index = 'index.ts';
 const src = './src';
@@ -83,3 +85,4 @@ dirs.forEach((dir) => {
 
 
 gulp.task('default', dirs);
+

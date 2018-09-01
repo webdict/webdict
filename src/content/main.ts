@@ -4,13 +4,6 @@ import inject from './ctrler';
 
 import { insertStorage } from '../shared/storage';
 
-function tryToGetTextFromSelection() {
-  try {
-    return window.getSelection().toString().trim();
-  } catch {
-    return null;
-  }
-}
 
 const injector: Injector = {
   play(data) {
@@ -25,18 +18,24 @@ const injector: Injector = {
   }
 };
 
-chrome.runtime.onMessage.addListener((msg: { 'play': string }) => {
-  if (injector.onplayerror) injector.onplayerror(msg.play);
-});
 const setEnable = inject(injector, () => { });
 
 
-chrome.runtime.onMessage.addListener(
-  (request) => {
-    if (request.message === 'ADD_NOTE') {
-      const noteText = tryToGetTextFromSelection();
-      if (noteText) insertStorage(':ngl@notebook', noteText, { moment: Date.now(), url: request.url });
-    } else if (request.message === 'STOP_FIND') {
-      setEnable(false);
-    }
-  });
+chrome.runtime.onMessage.addListener(({ action, data }) => {
+  if (action === 'ADD_NOTE') {
+    try {
+      const noteText = window.getSelection().toString().trim();
+      if (noteText) {
+        chrome.runtime.sendMessage({
+          text: noteText,
+          time: Date.now(),
+          url: data
+        });
+      }
+    } catch{ }
+  } else if (action === 'STOP_FIND') {
+    setEnable(false);
+  } else if (action === 'PLAY_ERROR') {
+    if (injector.onplayerror) injector.onplayerror(data);
+  }
+});

@@ -44,3 +44,6 @@
 !/**/README.md
 
 dist.crx
+
+.DS_Store
+package-lock.json

@@ -71,8 +71,8 @@ export function staticText(element: any) {
   while (element) {
     if (element.isContentEditable) return false;
     if (element.tagName) {
-      const name = element.tagName.toLocaleLowerCase().trim();
-      if ('input' === name || 'textarea' === name) return false;
+      const name = element.tagName.toLowerCase().trim();
+      if (['input', 'textarea', 'button'].indexOf(name) > -1) return false;
     }
     element = element.parentNode as HTMLElement;
   }

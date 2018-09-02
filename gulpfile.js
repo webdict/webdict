@@ -1,9 +1,9 @@
 const source = require('vinyl-source-stream');
-const sourcemaps = require('gulp-sourcemaps');
+// const sourcemaps = require('gulp-sourcemaps');
 const browserify = require('browserify');
 const replace = require('gulp-replace');
 const buffer = require('vinyl-buffer');
-const uglify = require('gulp-uglify');
+// const uglify = require('gulp-uglify');
 const minimist = require('minimist');
 const logger = require('gulplog');
 const tsify = require('tsify');

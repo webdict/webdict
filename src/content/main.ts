@@ -2,19 +2,19 @@ import { Injector, Entry } from './../shared/typings';
 
 import inject from './ctrler';
 
-import { insertStorage } from '../shared/storage';
+// import { insertStorage } from '../shared/storage';
 
 
 const injector: Injector = {
   play(data) {
-    chrome.runtime.sendMessage(data);
+    chrome.runtime.sendMessage({ action: 'PLAY_SOUND', data });
   },
   query(data: { query: string, lang: 'en' | 'zh' }, cb: (entry: Entry) => void) {
-    chrome.runtime.sendMessage(data, cb);
+    chrome.runtime.sendMessage({ action: 'QUERY_WORD', data }, cb);
   },
   post(data, cb?) {
-    if (cb) chrome.runtime.sendMessage(data, cb);
-    else chrome.runtime.sendMessage(data);
+    if (cb) chrome.runtime.sendMessage({ action: 'POST_WORD', data }, cb);
+    else chrome.runtime.sendMessage({ action: 'POST_WORD', data });
   }
 };
 
@@ -27,9 +27,12 @@ chrome.runtime.onMessage.addListener(({ action, data }) => {
       const noteText = window.getSelection().toString().trim();
       if (noteText) {
         chrome.runtime.sendMessage({
-          text: noteText,
-          time: Date.now(),
-          url: data
+          action,
+          data: {
+            text: noteText,
+            time: Date.now(),
+            url: data
+          }
         });
       }
     } catch{ }

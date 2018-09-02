@@ -1,4 +1,4 @@
-
+import './cnd';
 import './menus';
 import play from './player';
 

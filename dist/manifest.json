@@ -17,10 +17,12 @@
     "storage",
     "activeTab",
     "<all_urls>",
-    "contextMenus",
+    "webRequestBlocking",
     "unlimitedStorage",
-    "http://*/*",
-    "https://*/*"
+    "contextMenus",
+    "https://*/*",
+    "webRequest",
+    "http://*/*"
   ],
   "icons": {
     "16": "static/icon16.png",
@@ -28,14 +30,16 @@
     "48": "static/icon48.png",
     "128": "static/icon128.png"
   },
-  "content_scripts": [{
-    "matches": [
-      "<all_urls>"
-    ],
-    "js": [
-      "content.js"
-    ],
-    "run_at": "document_end"
-  }],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
   "content_security_policy": "script-src 'self' 'sha256-tOAB1KnvHDrMAoLuYpgAxHbihFJGRzHy0P9CoaaVybw=' https://www.googletagmanager.com https://www.google-analytics.com; object-src 'self'"
 }

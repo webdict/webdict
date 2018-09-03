@@ -2,7 +2,6 @@
   "name": "webdict",
   "version": "1.0.0",
   "description": "webdict - Play with Chrome",
-  "main": "./dist/main.js",
   "scripts": {
     "test": "gulp"
   },

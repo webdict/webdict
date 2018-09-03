@@ -1,4 +1,3 @@
-import { updateStorage } from '../shared/storage';
 import { Entry, Action, Rect, Injector } from '../shared/typings';
 import { dePinv, dePron } from './coder';
 // import { shorten, staticText } from './utility';
@@ -67,7 +66,7 @@ export default function (injector: Injector, handler: (data: { action: Action })
     event.stopPropagation();
     if (rentry.family && rentry.family.length > 1) {
       const qword = rentry.family[(++rentry.index) % rentry.family.length];
-      /*chrome.runtime.sendMessage*/injector.query({ query: qword, lang: rentry.cleng ? 'zh' : 'en' }, (entry: Entry) => {
+      injector.find({ word: qword, lang: rentry.cleng ? 'zh' : 'en' }, (entry: Entry) => {
         if (entry) {
           entry.family = rentry.family;
           entry.index = rentry.index;
@@ -331,15 +330,10 @@ export default function (injector: Injector, handler: (data: { action: Action })
     const qword = text.substr(2);
     const lang = text.substr(0, 2);
 
-    /*chrome.runtime.sendMessage*/injector.query({ query: qword, lang: lang as 'zh' | 'en' }, (entry: Entry) => {
+    injector.find({ word: qword, lang: lang as 'zh' | 'en' }, (entry: Entry) => {
       if (entry) {
         absoluteRect = rect;
         if (showDict(entry, rect)) {
-          updateStorage(':ngl@vocabulary', entry.qword, (item, save) => {
-            item.count = (item.count as number) + 1 || 1;
-            item.moment = Date.now();
-            save(item);
-          });
           handler({ action: lang === 'zh' ? Action.zhQueried : Action.enQueried });
         }
       }

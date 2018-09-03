@@ -43,7 +43,7 @@ export interface Rect { left: number; right: number; top: number; bottom: number
 
 export interface Injector {
   onplayerror?: (id: string) => void;
-  query(data: { query: string, lang: 'zh' | 'en' }, cb: (entry: Entry) => void): void;
+  find(data: { word: string, lang: 'zh' | 'en' }, cb: (entry: Entry) => void): void;
   play(data: { play: string }): void;
   post(data: { query: string, newVal: string }, cb?: (trans: string) => void): void;
 }

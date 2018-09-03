@@ -1,6 +1,5 @@
 import * as trans from './trans';
 import { Entry, ServerEntry } from '../shared/typings';
-import gtag from './gtag';
 
 
 
@@ -56,13 +55,12 @@ const map: { [qword: string]: Entry } = Object.create(null);
 // let mapSize = 0;
 
 
-export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry | undefined) => void, async = false) {
+export function find(qword: string, lang: 'zh' | 'en', consume: (result: Entry | undefined) => void, async = false) {
   const entry = map[qword] as Entry;
   if (entry) {
     if (entry !== EMPTY) {
       entry.trans = trans.get(entry.qword) || '[Not Found]';
       consume(entry);
-      gtag('lookup', { qword: entry.qword });
     } else {
       const xhr = new XMLHttpRequest();
       xhr.open('GET', F_URL + encodeURIComponent(lang + qword), async);
@@ -77,7 +75,6 @@ export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry 
             else baseEntry.poses.sort((i1, i2) => i1.split('$$')[1].toLowerCase() > i2.split('$$')[1].toLowerCase() ? 1 : -1);
             // mapSize++;
             consume(map[qword] = baseEntry);
-            gtag('lookup', { qword });
           }
         } else consume(undefined);
       };
@@ -101,13 +98,11 @@ export function query(qword: string, lang: 'zh' | 'en', consume: (result: Entry 
           // mapSize++;
           console.log(JSON.stringify(newEntry));
           consume(map[newEntry.qword] = newEntry);
-          gtag('lookup', { qword: newEntry.qword });
         }
       } else consume(undefined);
     };
     xhr.onerror = () => {
       consume(undefined);
-      gtag('lookup_error', { qword });
     };
     xhr.send();
   }

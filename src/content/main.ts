@@ -4,13 +4,12 @@ import inject from './ctrler';
 
 // import { insertStorage } from '../shared/storage';
 
-
 const injector: Injector = {
   play(data) {
     chrome.runtime.sendMessage({ action: 'PLAY_SOUND', data });
   },
-  query(data: { query: string, lang: 'en' | 'zh' }, cb: (entry: Entry) => void) {
-    chrome.runtime.sendMessage({ action: 'QUERY_WORD', data }, cb);
+  find(data: { word: string, lang: 'en' | 'zh' }, cb: (entry: Entry) => void) {
+    chrome.runtime.sendMessage({ action: 'FIND_WORD', data }, cb);
   },
   post(data, cb?) {
     if (cb) chrome.runtime.sendMessage({ action: 'POST_WORD', data }, cb);

@@ -47,3 +47,18 @@ export interface Injector {
   play(data: { play: string }): void;
   post(data: { query: string, newVal: string }, cb?: (trans: string) => void): void;
 }
+
+interface EnPron {
+  uk: string;
+  us: string;
+}
+interface ZhPron {
+  type: 'han' | 'yue';
+  pinv: string;
+}
+interface EntryItem {
+  head: string;
+  lang: 'zh' | 'en';
+  mean: string;
+  pron: EnPron[] | ZhPron[]
+}

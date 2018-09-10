@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "webdict - Play with Chrome",
   "scripts": {
-    "test": "gulp"
+    "test": "gulp",
+    "content-sass": "node-sass -w src/content/*.scss -o src/content"
   },
   "author": "Li Hongzhang",
   "license": "MIT",

@@ -1,8 +1,8 @@
-import { Entry, Action, Rect, Injector } from '../shared/typings';
+import { Entry, Rect, Injector } from '../shared/typings';
 import { dePinv, dePron } from './coder';
 // import { shorten, staticText } from './utility';
 
-export default function (injector: Injector, handler: (data: { action: Action }) => void) {
+export default function (injector: Injector) {
   let rentry: Entry;
   let absoluteRect: Rect;
   let styles: any = {
@@ -50,7 +50,6 @@ export default function (injector: Injector, handler: (data: { action: Action })
   hide.addEventListener('mouseup', (event) => {
     event.stopPropagation();
     dict.style.display = 'none';
-    handler({ action: Action.userClosed });
   }, true);
   const back = hide.getElementsByTagNameNS('http://www.w3.org/2000/svg', 'circle')[0];
   const arch = hide.getElementsByTagNameNS('http://www.w3.org/2000/svg', 'path')[0];
@@ -71,7 +70,6 @@ export default function (injector: Injector, handler: (data: { action: Action })
           entry.family = rentry.family;
           entry.index = rentry.index;
           showDict(entry, absoluteRect);
-          handler({ action: Action.familyQueried });
         }
       });
     }
@@ -111,8 +109,6 @@ export default function (injector: Injector, handler: (data: { action: Action })
         updateContent(rentry);
         pinpoint(absoluteRect);
         injector.post({ query: rentry.qword, newVal });
-        // chrome.runtime.sendMessage({ query: rentry.qword, newVal });
-        handler({ action: Action.applyDef });
       } else {
 
         /*chrome.runtime.sendMessage*/injector.post({ query: rentry.qword, newVal }, (trans: string) => {
@@ -120,7 +116,6 @@ export default function (injector: Injector, handler: (data: { action: Action })
           updateContent(rentry);
           pinpoint(absoluteRect);
         });
-        handler({ action: Action.applyAtDef });
       }
     } else pinpoint(absoluteRect);
   };
@@ -137,7 +132,6 @@ export default function (injector: Injector, handler: (data: { action: Action })
   window.addEventListener('resize', () => {
     if (dict.style.display !== 'none') {
       dict.style.display = 'none';
-      handler({ action: Action.resizeClosed });
     }
   });
   function playAudio(event: Event) {
@@ -145,21 +139,13 @@ export default function (injector: Injector, handler: (data: { action: Action })
     const el = event.target as HTMLElement;
     const play = el.getAttribute('data-url') as string;
     injector.play({ play });
-    // chrome.runtime.sendMessage({ play: el.getAttribute('data-url') });
-    if (play.startsWith('zh')) {
-      handler({ action: Action.playAudioZH });
-    } else if (play.startsWith('uk')) {
-      handler({ action: Action.playAudioUK });
-    } else {
-      handler({ action: Action.playAudioUS });
-    }
+
   }
 
   // on audio playing failed:
   injector.onplayerror = (id: string) => {
     const target = pron.querySelector(`[data-url="${id}"]`) as HTMLElement;
     if (target) target.style.textDecoration = 'line-through';
-    handler({ action: Action.playAudioFailed });
   };
 
 
@@ -318,12 +304,11 @@ export default function (injector: Injector, handler: (data: { action: Action })
 
   function showDict(entry: Entry, rect: Rect) {
     updateContent(rentry = entry);
-    return pinpoint(rect);
+    return pinpoint(absoluteRect = rect);
   }
 
   /*export*/ function hideDict() {
     dict.style.display = 'none';
-    handler({ action: Action.userClosed });
   }
 
   /*export*/ function tryToShowDict(text: string, rect: Rect) {
@@ -332,10 +317,7 @@ export default function (injector: Injector, handler: (data: { action: Action })
 
     injector.find({ word: qword, lang: lang as 'zh' | 'en' }, (entry: Entry) => {
       if (entry) {
-        absoluteRect = rect;
-        if (showDict(entry, rect)) {
-          handler({ action: lang === 'zh' ? Action.zhQueried : Action.enQueried });
-        }
+        showDict(entry, rect);
       }
     });
   }

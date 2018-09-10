@@ -5,13 +5,14 @@ import inject from './dict';
 import { shorten, staticText } from './utility';
 
 
-export default function (injector: Injector, handler: (data: { action: Action }) => void) {
+export default function (injector: Injector) {
 
-  const Dict = inject(injector, handler);
+  const Dict = inject(injector);
 
   let mouseupEnabled = true;
   let dictEnabled = true;
   let mousedownTargetIsInput = false;
+  
   function capture(): [string | null, Rect | null] {
     try {
       const sele = window.getSelection();

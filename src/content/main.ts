@@ -17,27 +17,25 @@ const injector: Injector = {
   }
 };
 
-const setEnable = inject(injector, () => { });
+const setEnable = inject(injector);
 
 
 chrome.runtime.onMessage.addListener(({ action, data }) => {
-  if (action === 'ADD_NOTE') {
-    try {
-      const noteText = window.getSelection().toString().trim();
-      if (noteText) {
-        chrome.runtime.sendMessage({
-          action,
-          data: {
-            text: noteText,
-            time: Date.now(),
-            url: data
-          }
-        });
-      }
-    } catch{ }
+  if (action === 'PLAY_ERROR') {
+    if (injector.onplayerror) injector.onplayerror(data);
   } else if (action === 'STOP_FIND') {
     setEnable(false);
-  } else if (action === 'PLAY_ERROR') {
-    if (injector.onplayerror) injector.onplayerror(data);
+  } else if (action === 'ADD_NOTE') {
+    const noteText = window.getSelection().toString().trim();
+    if (noteText) {
+      chrome.runtime.sendMessage({
+        action,
+        data: {
+          text: noteText,
+          time: Date.now(),
+          url: data
+        }
+      });
+    }
   }
 });

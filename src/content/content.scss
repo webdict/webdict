@@ -1,0 +1,237 @@
+$pron-uk-color:#07255e;
+$pron-us-color:#8f0610;
+$main-background:#fff1e5;
+$main-border-color:rgb(233, 222, 207);
+$main-shadow-color:rgb(167, 165, 155);
+$hide-less-color:$pron-uk-color;
+$hide-more-color:$pron-us-color;
+$hide-background:$main-background;
+$head-line-height:1.32;
+$transition:0.32s;
+.lanx {
+  &-root {
+    position: absolute;
+    font-family: "Lucida Sans Unicode", "Lucida Grande";
+    user-select: none;
+    font-size: 16px;
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    &-less {
+      .lanx {
+        &-word,
+        &-back,
+        &-done {
+          color: $pron-uk-color;
+        }
+        &-hide {
+          &:hover,
+          &::before,
+          &::after {
+            background-color: $hide-less-color;
+          }
+        }
+      }
+    }
+    &-more {
+      .lanx {
+        &-word,
+        &-back,
+        &-done {
+          color: $pron-us-color;
+        }
+        &-hide {
+          &:hover,
+          &::before,
+          &::after {
+            background-color: $hide-more-color;
+          }
+        }
+      }
+    }
+    &-above {
+      transform: translateY(-12px);
+      .lanx {
+        &-view,
+        &-edit {
+          bottom: 0;
+        }
+        &-foot {
+          bottom: 0;
+          &::before,
+          &::after {
+            top: 0;
+          }
+          &::before {
+            border-top: 14px solid $main-border-color;
+          }
+          &::after {
+            border-top: 12px solid $main-background;
+          }
+        }
+      }
+    }
+    &-below {
+      transform: translateY(12px);
+      .lanx {
+        &-view,
+        &-edit {
+          top: 0;
+        }
+        &-foot {
+          top: 0;
+          &::before,
+          &::after {
+            bottom: 0;
+          }
+          &::before {
+            border-bottom: 14px solid $main-border-color;
+          }
+          &::after {
+            border-bottom: 12px solid $main-background;
+          }
+        }
+      }
+    }
+  }
+  &-view,
+  &-edit {
+    position: absolute;
+    background-color: $main-background;
+    border: 1px solid $main-border-color;
+    border-radius: 3px;
+    box-shadow: $main-shadow-color 0px 0px 8px;
+    min-width: 180px;
+    max-width: 360px;
+    padding: 8px;
+    left: 0;
+    transform: translateX(-50%);
+  }
+  &-head,
+  &-pron {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  &-word,
+  &-back {
+    font-weight: 550;
+    line-height: $head-line-height;
+  }
+  &-hide {
+    line-height: $head-line-height;
+    padding: 0;
+    margin: 0 4px;
+    transform: scale(.8);
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    transition: $transition;
+    &::before,
+    &::after {
+      padding: 0;
+      margin: 0;
+      position: absolute;
+      top: 2.5px;
+      left: 7px;
+      height: 11px;
+      content: '';
+      width: 2px;
+      transition: $transition;
+    }
+    &::before {
+      transform: rotate(45deg);
+    }
+    &::after {
+      transform: rotate(-45deg);
+    }
+    &:hover {
+      &::before,
+      &::after {
+        background-color: $hide-background;
+      }
+    }
+  }
+  &-mean {
+    line-height: $head-line-height;
+  }
+  &-pron {
+    &-puk {
+      color: $pron-uk-color;
+    }
+    &-pos {
+      margin: 0 4px;
+      white-space: nowrap;
+    }
+    &-pus {
+      color: $pron-us-color;
+    }
+    &-play {
+      white-space: nowrap;
+      &[disabled] {
+        text-decoration: line-through;
+      }
+    }
+  }
+  &-edit {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+  &-area {
+    margin: 6px 0 8px;
+    background-color: transparent;
+    border: 1px solid $main-shadow-color;
+    line-height: $head-line-height;
+    padding: 6px;
+    box-sizing: border-box;
+    display: block;
+    border-radius: 3px;
+    font-size: 16px;
+    width: 100%;
+    resize: none;
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+  }
+  &-done {
+    line-height: 1;
+    padding: 6px 9px;
+    border-radius: 3px;
+    font-size: 14px;
+    transition: $transition;
+    &:hover {
+      background-color: $main-border-color;
+    }
+  }
+  &-foot {
+    position: absolute;
+    left: 50%;
+    width: 0;
+    height: 0;
+    &::before,
+    &::after {
+      position: absolute;
+      content: '';
+      width: 0;
+      height: 0;
+    }
+    &::before {
+      left: -14px;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+    }
+    &::after {
+      left: -12px;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+    }
+  }
+  &-none {
+    display: none;
+  }
+}

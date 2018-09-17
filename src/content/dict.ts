@@ -64,6 +64,8 @@ export default function (injector: Injector) {
     }
   });
   Mean.addEventListener('click', event => {
+    Edit.style.height = View.offsetHeight + 'px';
+    Edit.style.width = View.offsetWidth + 'px';
     View.classList.add('lanx-none');
     Edit.classList.remove('lanx-none');
     event.stopPropagation();

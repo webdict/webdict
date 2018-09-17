@@ -129,7 +129,7 @@ $foot-width-after: 8px;
     border-radius: 3px;
     box-shadow: $main-shadow-color 0px 0px 8px;
     min-width: 180px;
-    padding: 4px 8px 8px;
+    padding: 4px 8px;
   }
   &-head {
     display: flex;
@@ -139,11 +139,13 @@ $foot-width-after: 8px;
   }
   &-word,
   &-back {
+    flex: initial;
     font-weight: 550;
     line-height: $head-line-height;
     font-size: $font-size;
   }
   &-hide {
+    flex: initial;
     line-height: $head-line-height;
     padding: 0;
     margin: 0 4px;
@@ -179,18 +181,18 @@ $foot-width-after: 8px;
     }
   }
   &-mean {
+    flex: initial;
+    line-height: $pron-line-height;
+    font-size: $font-size;
     &::first-line {
       line-height: $head-line-height;
     }
-    line-height: $pron-line-height;
-    font-size: $font-size;
-    hyphens: auto;
   }
   &-pron {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 4px;
+    margin: 4px 0;
     &-row {
       flex-flow: row nowrap;
     }
@@ -198,18 +200,21 @@ $foot-width-after: 8px;
       flex-flow: column nowrap;
     }
     &-puk {
+      flex: initial;
       color: $pron-uk-color;
       white-space: nowrap;
       line-height: 1;
       font-size: $font-size;
     }
     &-pos {
+      flex: initial;
       margin: 0 4px;
       white-space: nowrap;
       line-height: 1;
       font-size: $font-size;
     }
     &-pus {
+      flex: initial;
       color: $pron-us-color;
       white-space: nowrap;
       line-height: 1;
@@ -226,12 +231,14 @@ $foot-width-after: 8px;
   }
   &-edit {
     display: flex;
+    min-height: 100px;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
   }
   &-area {
-    margin: 6px 0 8px;
+    flex: auto;
+    margin: 6px 0 4px;
     background-color: transparent;
     border: 1px solid $main-shadow-color;
     line-height: $head-line-height;
@@ -248,6 +255,7 @@ $foot-width-after: 8px;
     }
   }
   &-done {
+    flex: initial;
     line-height: 1;
     padding: 6px 9px;
     border-radius: 3px;

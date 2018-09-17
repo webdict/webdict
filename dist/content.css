@@ -1,8 +1,23 @@
+@keyframes lanx-root-above {
+  from {
+    transform: translateY(-4px);
+    opacity: 0; }
+  to {
+    transform: translateY(-12px);
+    opacity: 1; } }
+
+@keyframes lanx-root-below {
+  from {
+    transform: translateY(4px);
+    opacity: 0; }
+  to {
+    transform: translateY(12px);
+    opacity: 1; } }
+
 .lanx-root {
   position: absolute;
   font-family: "Lucida Sans Unicode", "Lucida Grande";
   user-select: none;
-  font-size: 16px;
   width: 0;
   height: 0;
   cursor: pointer;
@@ -16,7 +31,7 @@
   .lanx-root-more .lanx-hide:hover, .lanx-root-more .lanx-hide::before, .lanx-root-more .lanx-hide::after {
     background-color: #8f0610; }
   .lanx-root-above {
-    transform: translateY(-12px); }
+    animation: lanx-root-above 160ms ease-out 0s 1 normal forwards running; }
     .lanx-root-above .lanx-main {
       bottom: 0; }
     .lanx-root-above .lanx-foot {
@@ -24,11 +39,11 @@
       .lanx-root-above .lanx-foot::before, .lanx-root-above .lanx-foot::after {
         top: -1px; }
       .lanx-root-above .lanx-foot::before {
-        border-top: 14px solid #e9decf; }
+        border-top: 10px solid #e9decf; }
       .lanx-root-above .lanx-foot::after {
-        border-top: 12px solid #fff1e5; }
+        border-top: 8px solid #fff1e5; }
   .lanx-root-below {
-    transform: translateY(12px); }
+    animation: lanx-root-below 160ms ease-out 0s 1 normal forwards running; }
     .lanx-root-below .lanx-main {
       top: 0; }
     .lanx-root-below .lanx-foot {
@@ -36,9 +51,9 @@
       .lanx-root-below .lanx-foot::before, .lanx-root-below .lanx-foot::after {
         bottom: -1px; }
       .lanx-root-below .lanx-foot::before {
-        border-bottom: 14px solid #e9decf; }
+        border-bottom: 10px solid #e9decf; }
       .lanx-root-below .lanx-foot::after {
-        border-bottom: 12px solid #fff1e5; }
+        border-bottom: 8px solid #fff1e5; }
 
 .lanx-main {
   position: absolute;
@@ -47,7 +62,7 @@
   border-radius: 3px;
   box-shadow: #a7a59b 0px 0px 8px;
   min-width: 180px;
-  padding: 8px; }
+  padding: 4px 8px 8px; }
 
 .lanx-head {
   display: flex;
@@ -57,7 +72,8 @@
 
 .lanx-word, .lanx-back {
   font-weight: 550;
-  line-height: 1.32; }
+  line-height: 1.32;
+  font-size: 15px; }
 
 .lanx-hide {
   line-height: 1.32;
@@ -87,36 +103,42 @@
     background-color: #fff1e5; }
 
 .lanx-mean {
-  line-height: 1.1; }
+  line-height: 1.1;
+  font-size: 15px;
+  hyphens: auto; }
   .lanx-mean::first-line {
     line-height: 1.32; }
 
 .lanx-pron {
   display: flex;
-  flex-flow: row nowrap;
   justify-content: center;
-  align-items: center; }
-  .lanx-pron-long {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center; }
+  align-items: center;
+  padding-top: 4px; }
+  .lanx-pron-row {
+    flex-flow: row nowrap; }
+  .lanx-pron-col {
+    flex-flow: column nowrap; }
   .lanx-pron-puk {
     color: #07255e;
-    white-space: nowrap; }
+    white-space: nowrap;
+    line-height: 1;
+    font-size: 15px; }
   .lanx-pron-pos {
     margin: 0 4px;
-    white-space: nowrap; }
+    white-space: nowrap;
+    line-height: 1;
+    font-size: 15px; }
   .lanx-pron-pus {
     color: #8f0610;
-    white-space: nowrap; }
+    white-space: nowrap;
+    line-height: 1;
+    font-size: 15px; }
   .lanx-pron-play {
-    white-space: nowrap; }
+    white-space: nowrap;
+    line-height: 1;
+    font-size: 15px; }
     .lanx-pron-play[disabled] {
       text-decoration: line-through; }
-
-.lanx-pron + .lanx-pron {
-  line-height: 1.1; }
 
 .lanx-edit {
   display: flex;
@@ -133,7 +155,7 @@
   box-sizing: border-box;
   display: block;
   border-radius: 3px;
-  font-size: 16px;
+  font-size: 15px;
   width: 100%;
   resize: none; }
   .lanx-area::-webkit-scrollbar {
@@ -160,13 +182,13 @@
     width: 0;
     height: 0; }
   .lanx-foot::before {
-    left: -14px;
-    border-left: 14px solid transparent;
-    border-right: 14px solid transparent; }
+    left: -10px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent; }
   .lanx-foot::after {
-    left: -12px;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent; }
+    left: -8px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent; }
 
 .lanx-none {
   display: none; }

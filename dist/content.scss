@@ -9,12 +9,40 @@ $hide-background:$main-background;
 $head-line-height:1.32;
 $pron-line-height:1.1;
 $transition:0.32s;
+$font-size:15px;
+$foot-width-before: 10px;
+$foot-width-after: 8px;
+@keyframes lanx-root-above {
+  from {
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(-12px);
+    opacity: 1;
+  }
+}
+
+@keyframes lanx-root-below {
+  from {
+    transform: translateY(4px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(12px);
+    opacity: 1;
+  }
+}
+
+@mixin slidein($name) {
+  animation: $name 160ms ease-out 0s 1 normal forwards running;
+}
+
 .lanx {
   &-root {
     position: absolute;
     font-family: "Lucida Sans Unicode", "Lucida Grande";
     user-select: none;
-    font-size: 16px;
     width: 0;
     height: 0;
     cursor: pointer;
@@ -52,7 +80,7 @@ $transition:0.32s;
       }
     }
     &-above {
-      transform: translateY(-12px);
+      @include slidein(lanx-root-above);
       .lanx {
         &-main {
           bottom: 0;
@@ -64,16 +92,16 @@ $transition:0.32s;
             top: -1px;
           }
           &::before {
-            border-top: 14px solid $main-border-color;
+            border-top: $foot-width-before solid $main-border-color;
           }
           &::after {
-            border-top: 12px solid $main-background;
+            border-top: $foot-width-after solid $main-background;
           }
         }
       }
     }
     &-below {
-      transform: translateY(12px);
+      @include slidein(lanx-root-below);
       .lanx {
         &-main {
           top: 0;
@@ -85,10 +113,10 @@ $transition:0.32s;
             bottom: -1px;
           }
           &::before {
-            border-bottom: 14px solid $main-border-color;
+            border-bottom: $foot-width-before solid $main-border-color;
           }
           &::after {
-            border-bottom: 12px solid $main-background;
+            border-bottom: $foot-width-after solid $main-background;
           }
         }
       }
@@ -101,7 +129,7 @@ $transition:0.32s;
     border-radius: 3px;
     box-shadow: $main-shadow-color 0px 0px 8px;
     min-width: 180px;
-    padding: 8px;
+    padding: 4px 8px 8px;
   }
   &-head {
     display: flex;
@@ -113,6 +141,7 @@ $transition:0.32s;
   &-back {
     font-weight: 550;
     line-height: $head-line-height;
+    font-size: $font-size;
   }
   &-hide {
     line-height: $head-line-height;
@@ -154,39 +183,46 @@ $transition:0.32s;
       line-height: $head-line-height;
     }
     line-height: $pron-line-height;
+    font-size: $font-size;
+    hyphens: auto;
   }
   &-pron {
     display: flex;
-    flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-    &-long {
-      display: flex;
+    padding-top: 4px;
+    &-row {
+      flex-flow: row nowrap;
+    }
+    &-col {
       flex-flow: column nowrap;
-      justify-content: center;
-      align-items: center;
     }
     &-puk {
       color: $pron-uk-color;
       white-space: nowrap;
+      line-height: 1;
+      font-size: $font-size;
     }
     &-pos {
       margin: 0 4px;
       white-space: nowrap;
+      line-height: 1;
+      font-size: $font-size;
     }
     &-pus {
       color: $pron-us-color;
       white-space: nowrap;
+      line-height: 1;
+      font-size: $font-size;
     }
     &-play {
       white-space: nowrap;
+      line-height: 1;
+      font-size: $font-size;
       &[disabled] {
         text-decoration: line-through;
       }
     }
-  }
-  &-pron+&-pron {
-    line-height: $pron-line-height;
   }
   &-edit {
     display: flex;
@@ -203,7 +239,7 @@ $transition:0.32s;
     box-sizing: border-box;
     display: block;
     border-radius: 3px;
-    font-size: 16px;
+    font-size: $font-size;
     width: 100%;
     resize: none;
     &::-webkit-scrollbar {
@@ -215,7 +251,7 @@ $transition:0.32s;
     line-height: 1;
     padding: 6px 9px;
     border-radius: 3px;
-    font-size: 14px;
+    font-size: -1px+$font-size;
     transition: $transition;
     &:hover {
       background-color: $main-border-color;
@@ -234,14 +270,14 @@ $transition:0.32s;
       height: 0;
     }
     &::before {
-      left: -14px;
-      border-left: 14px solid transparent;
-      border-right: 14px solid transparent;
+      left: -$foot-width-before;
+      border-left: $foot-width-before solid transparent;
+      border-right: $foot-width-before solid transparent;
     }
     &::after {
-      left: -12px;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
+      left: -$foot-width-after;
+      border-left: $foot-width-after solid transparent;
+      border-right: $foot-width-after solid transparent;
     }
   }
   &-none {

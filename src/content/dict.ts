@@ -185,10 +185,8 @@ export default function (injector: Injector) {
     if (entry.count) Word.setAttribute('title', '第' + entry.count + '次查询');
     else Word.removeAttribute('title');
     (Area as HTMLTextAreaElement).value = Mean.innerText = entry.trans;
-
     ensurePronItem(List, entry.poses.length).forEach((div, c) => {
       const parts = entry.cleng ? ['»', entry.poses[c], '«'] : entry.poses[c].split('$$');
-      parts[1] = ' ' + parts[1] + ' ';
       for (let p = 0; p < 3; p++) {
         const span = div.children[p];
         if (entry.cleng && p === 1) {
@@ -205,17 +203,25 @@ export default function (injector: Injector) {
           setButton(buttons[b], entry.cleng ? '拼音' : (p === 0 ? '英式' : '美式'));
         }
       }
-      console.log('.lanx-pron width', div.offsetWidth);
-      if (div.offsetWidth > 360) {
-        div.classList.add('lanx-pron-long');
-      } else div.classList.remove('lanx-pron-long');
+      if (div.offsetWidth > 320) {
+        div.classList.remove('lanx-pron-row');
+        div.classList.add('lanx-pron-col');
+      } else {
+        div.classList.remove('lanx-pron-col');
+        div.classList.add('lanx-pron-row');
+      }
     });
 
   }
 
   function pinpoint(aRect: Rect): boolean {
     const x = window.pageXOffset, y = window.pageYOffset;
-    const rRect = { left: aRect.left - x, right: aRect.right - x, top: aRect.top - y, bottom: aRect.bottom - y };
+    const rRect = {
+      left: aRect.left - x,
+      right: aRect.right - x,
+      top: aRect.top - y,
+      bottom: aRect.bottom - y
+    };
     if (Math.max(document.documentElement.clientWidth, document.documentElement.offsetWidth) < Main.offsetWidth) {
       Dict.classList.add('lanx-none');
       return false;

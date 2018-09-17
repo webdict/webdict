@@ -26,7 +26,7 @@ export function dePron(input: string, lang: string) {
     const suffix = p.charAt(p.length - 1) === ']';
     if (suffix) p = p.substring(0, p.length - 1);
     const pronMark = pron(p);
-    output += '<span data-url="' + lang + pronMark[1] + '">' + pronMark[0] + '</span>';
+    output += '<span class="lanx-pron-play" data-code="' + lang + pronMark[1] + '">' + pronMark[0] + '</span>';
     if (suffix) output += ']';
   }
   return output;
@@ -45,7 +45,7 @@ function mark(input: string, lang: string) {
       const end = pv.length - 1;
       let tone = pv.charCodeAt(end) - 48;
       if (tone === 5) tone = 0;
-      return '<span data-url="' + lang + input + '">' + pv.substr(0, i) + mask.charAt(pin + tone) + pv.substring(i + 1, end) + '</span>';
+      return '<span class="lanx-pron-play" data-code="' + lang + input + '">' + pv.substr(0, i) + mask.charAt(pin + tone) + pv.substring(i + 1, end) + '</span>';
     }
   }
   return input;

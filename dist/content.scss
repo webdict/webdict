@@ -7,6 +7,7 @@ $hide-less-color:$pron-uk-color;
 $hide-more-color:$pron-us-color;
 $hide-background:$main-background;
 $head-line-height:1.32;
+$pron-line-height:1.1;
 $transition:0.32s;
 .lanx {
   &-root {
@@ -17,6 +18,7 @@ $transition:0.32s;
     width: 0;
     height: 0;
     cursor: pointer;
+    z-index: 999999;
     &-less {
       .lanx {
         &-word,
@@ -52,15 +54,14 @@ $transition:0.32s;
     &-above {
       transform: translateY(-12px);
       .lanx {
-        &-view,
-        &-edit {
+        &-main {
           bottom: 0;
         }
         &-foot {
           bottom: 0;
           &::before,
           &::after {
-            top: 0;
+            top: -1px;
           }
           &::before {
             border-top: 14px solid $main-border-color;
@@ -74,15 +75,14 @@ $transition:0.32s;
     &-below {
       transform: translateY(12px);
       .lanx {
-        &-view,
-        &-edit {
+        &-main {
           top: 0;
         }
         &-foot {
           top: 0;
           &::before,
           &::after {
-            bottom: 0;
+            bottom: -1px;
           }
           &::before {
             border-bottom: 14px solid $main-border-color;
@@ -94,21 +94,16 @@ $transition:0.32s;
       }
     }
   }
-  &-view,
-  &-edit {
+  &-main {
     position: absolute;
     background-color: $main-background;
     border: 1px solid $main-border-color;
     border-radius: 3px;
     box-shadow: $main-shadow-color 0px 0px 8px;
     min-width: 180px;
-    max-width: 360px;
     padding: 8px;
-    left: 0;
-    transform: translateX(-50%);
   }
-  &-head,
-  &-pron {
+  &-head {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
@@ -155,11 +150,25 @@ $transition:0.32s;
     }
   }
   &-mean {
-    line-height: $head-line-height;
+    &::first-line {
+      line-height: $head-line-height;
+    }
+    line-height: $pron-line-height;
   }
   &-pron {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    &-long {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+    }
     &-puk {
       color: $pron-uk-color;
+      white-space: nowrap;
     }
     &-pos {
       margin: 0 4px;
@@ -167,6 +176,7 @@ $transition:0.32s;
     }
     &-pus {
       color: $pron-us-color;
+      white-space: nowrap;
     }
     &-play {
       white-space: nowrap;
@@ -174,6 +184,9 @@ $transition:0.32s;
         text-decoration: line-through;
       }
     }
+  }
+  &-pron+&-pron {
+    line-height: $pron-line-height;
   }
   &-edit {
     display: flex;

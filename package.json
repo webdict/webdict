@@ -4,7 +4,7 @@
   "description": "webdict - Play with Chrome",
   "scripts": {
     "test": "gulp",
-    "content-sass": "node-sass -w src/content/*.scss -o src/content"
+    "content-sass": "node-sass -w dist/*.scss -o dist"
   },
   "author": "Li Hongzhang",
   "license": "MIT",

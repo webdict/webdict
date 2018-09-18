@@ -3,13 +3,9 @@ import { Entry, ServerEntry } from '../shared/typings';
 
 
 
-const Q_URL = '__DOMAIN_HOLDER__/q/';
-// const M_URL = '__DOMAIN_HOLDER__/m/';
-const F_URL = '__DOMAIN_HOLDER__/f/';
-// const D_URL = '__DOMAIN_HOLDER__/d/';
-
-
-const VERSION = '__VERSION_HOLDER__';
+const Q_URL = 'http://120.78.146.219/q/';
+const F_URL = '1/f/';
+const VERSION = '1';
 
 
 function resolveFromServer(entry: ServerEntry, qword: string) {

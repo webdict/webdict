@@ -35,7 +35,7 @@ $foot-width-after: 8px;
 }
 
 @mixin slidein($name) {
-  animation: $name 160ms ease-out 0s 1 normal forwards running;
+  animation: $name 100ms ease-out 0s 1 normal forwards running;
 }
 
 .lanx {

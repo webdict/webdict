@@ -1,7 +1,6 @@
-import gtag from './gtag';
-const ZH_URL = '__DOMAIN_HOLDER__/static/pron/zh/';
-const UK_URL = '__DOMAIN_HOLDER__/static/pron/uk/';
-const US_URL = '__DOMAIN_HOLDER__/static/pron/us/';
+const ZH_URL = 'http://120.78.146.219/static/pron/zh/';
+const UK_URL = 'http://120.78.146.219/static/pron/uk/';
+const US_URL = 'http://120.78.146.219/static/pron/us/';
 
 
 const map: { [id: string]: HTMLAudioElement | undefined } = Object.create(null);
@@ -38,7 +37,6 @@ export default function play(id: string, onerror: (id: string) => void) {
       event.stopPropagation();
       newAudio.setAttribute('disabled', 'disabled');
       if (onerror) onerror(id);
-      gtag('play_error', { id });
     };
   }
 }

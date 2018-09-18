@@ -1,15 +1,9 @@
 {
-  "git.ignoreLimitWarning": true,
-  "files.autoSave": "onFocusChange",
   "files.exclude": {
-    "**/*.db-journal": true,
-    "**/**/static": true,
-    "**/LICENSE": true,
+    "**/.vscode": true,
     "**/design": true,
-    "**/*.pem": true,
-    "**/*.ppk": true,
-    "**/*.txt": true,
-    "**/*.crx": true,
-    "**/*.db": true
+    "**/LICENSE": true,
+    "**/node_modules": true,
+    "**/static": true
   }
 }

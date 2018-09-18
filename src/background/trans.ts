@@ -1,8 +1,8 @@
 // const Q_URL = '__DOMAIN_HOLDER__/q/';
 // const M_URL = '__DOMAIN_HOLDER__/m/';
 // const F_URL = '__DOMAIN_HOLDER__/f/';
-const D_URL = '__DOMAIN_HOLDER__/d/';
-const P_URL = '__DOMAIN_HOLDER__/definition';
+const D_URL = 'http://120.78.146.219/d/';
+const P_URL = 'http://120.78.146.219/definition';
 
 
 const trans: { [key: string]: string } = Object.create(null);

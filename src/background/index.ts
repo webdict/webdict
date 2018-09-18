@@ -27,4 +27,7 @@ chrome.runtime.onMessage.addListener(({ action, data }, sender, sendRes) => {
 });
 
 
-
+chrome.browserAction.onClicked.addListener(() => {
+  const url = chrome.runtime.getURL('console.html');
+  chrome.tabs.create({ url });
+})

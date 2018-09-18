@@ -1,6 +1,6 @@
 /node_modules
 /__pycache__
-/dist/*.js
+/dist
 
 /design/*
 /static/*
@@ -15,6 +15,7 @@
 !/src/popup
 !/src/shared
 !/src/vocabulary
+/src/**/*.css
 
 /gulp/**/*.ts
 /src/**/*.js

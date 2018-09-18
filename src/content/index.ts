@@ -1,7 +1,7 @@
-import { Injector, Entry } from './../shared/typings';
+import { Injector, Entry } from '../shared/typings';
 
 import inject from './ctrler';
-
+import './index.scss';
 // import { insertStorage } from '../shared/storage';
 
 const injector: Injector = {

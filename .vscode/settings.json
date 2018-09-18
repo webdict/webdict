@@ -7,5 +7,5 @@
     "**/package-lock.json": true,
     "**/static": true
   },
-  "files.autoSave": "onWindowChange"
+  "files.autoSave": "onFocusChange"
 }

@@ -1,7 +1,17 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps as Props } from 'react-router-dom';
 
-export default class Index extends React.Component<RouteComponentProps, any>{
+interface State {
+  data: any[];
+}
+
+export default class Index extends React.Component<Props, State>{
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: []
+    };
+  }
   render() {
     return (
       <div>Hello, world!</div>

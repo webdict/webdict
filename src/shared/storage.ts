@@ -15,7 +15,7 @@ export function queryStorage(sectionKey: sectionKey, consume: (section?: Section
         chrome.storage.local.set(storage);
       });
     });
-  } catch { }
+  } catch(e) { }
 }
 
 
@@ -28,7 +28,7 @@ export function updateStorage(sectionKey: sectionKey, itemKey: string, update: (
         chrome.storage.local.set(storage);
       });
     });
-  } catch { }
+  } catch(e) { }
 }
 
 
@@ -39,7 +39,7 @@ export function insertStorage(sectionKey: sectionKey, itemKey: string, item: Ite
       storage[sectionKey][itemKey] = item;
       chrome.storage.local.set(storage);
     });
-  } catch {
+  } catch(e) {
 
   }
 }
@@ -54,7 +54,7 @@ export function removeStorage(sectionKey: sectionKey, itemKey: string) {
 
       }
     });
-  } catch { }
+  } catch(e) { }
 }
 
 

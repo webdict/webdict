@@ -12,6 +12,8 @@ $transition:0.32s;
 $font-size:15px;
 $foot-width-before: 10px;
 $foot-width-after: 8px;
+$font-color:#222;
+
 @keyframes lanx-root-above {
   from {
     transform: translateY(-4px);
@@ -184,6 +186,7 @@ $foot-width-after: 8px;
     flex: initial;
     line-height: $pron-line-height;
     font-size: $font-size;
+    color: $font-color;
     &::first-line {
       line-height: $head-line-height;
     }
@@ -212,6 +215,7 @@ $foot-width-after: 8px;
       white-space: nowrap;
       line-height: 1;
       font-size: $font-size;
+      color: $font-color;
     }
     &-pus {
       flex: initial;
@@ -249,6 +253,7 @@ $foot-width-after: 8px;
     font-size: $font-size;
     width: 100%;
     resize: none;
+    color: $font-color;
     &::-webkit-scrollbar {
       width: 0;
       height: 0;

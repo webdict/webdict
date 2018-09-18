@@ -7,8 +7,10 @@ const fs = require('fs');
 module.exports = {
   mode: 'production',
   entry: fs.readdirSync('src').reduce((o, d) => {
-    const p = path.join(__dirname, 'src', d, 'index.ts');
-    if (fs.existsSync(p)) o[d] = p;
+    for (const ex of ['index.ts', 'index.tsx', 'index.js', 'index.jsx']) {
+      const p = path.join(__dirname, 'src', d, ex);
+      if (fs.existsSync(p)) o[d] = p;
+    }
     return o;
   }, {}),
   output: {
@@ -16,7 +18,7 @@ module.exports = {
     filename: '[name].js'
   },
   resolve: {
-    extensions: ['.js', '.ts']
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   module: {
     rules: [{

@@ -7,7 +7,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     } else {
       chrome.tabs.sendMessage(id, { action, data });
     }
-  } catch { }
+  } catch(e) { }
 });
 
 

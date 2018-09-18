@@ -32,7 +32,7 @@ export default function (injector: Injector) {
             top: rect.top + y
           }];
       }
-    } catch { }
+    } catch(e) { }
     return [null, null];
   }
   const input = Dict.input;

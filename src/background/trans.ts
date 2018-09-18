@@ -53,7 +53,7 @@ if (chrome && chrome.windows && chrome.tabs) {
   try {
     chrome.windows.onRemoved.addListener(post);
     chrome.tabs.onRemoved.addListener(post);
-  } catch{ }
+  } catch(e){ }
 }
 
 

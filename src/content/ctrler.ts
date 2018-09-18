@@ -1,6 +1,6 @@
 // import { updateStorage } from '../shared/storage';
-import { Action, Rect, Injector } from '../shared/typings';
-import inject from './dict';
+import { Rect, Injector } from '../shared/typings';
+import inject from './popup';
 // import { dePinv, dePron } from './coder';
 import { shorten, staticText } from './utility';
 

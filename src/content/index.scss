@@ -1,54 +1,13 @@
-$pron-uk-color:#07255e;
-$pron-us-color:#8f0610;
-$main-background:#fff1e5;
-$main-border-color:rgb(233, 222, 207);
-$main-shadow-color:rgb(167, 165, 155);
-$hide-less-color:$pron-uk-color;
-$hide-more-color:$pron-us-color;
-$hide-background:$main-background;
-$head-line-height:1.32;
-$pron-line-height:1.1;
-$transition:0.32s;
-$font-size:15px;
-$foot-width-before: 10px;
-$foot-width-after: 8px;
-$font-color:#222;
-
-@keyframes lanx-root-above {
-  from {
-    transform: translateY(-4px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(-12px);
-    opacity: 1;
-  }
-}
-
-@keyframes lanx-root-below {
-  from {
-    transform: translateY(4px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(12px);
-    opacity: 1;
-  }
-}
-
-@mixin slidein($name) {
-  animation: $name 100ms ease-out 0s 1 normal forwards running;
-}
+@import 'vars';
 
 .lanx {
   &-root {
+    @include dispadmar(block, 0, 0);
     position: absolute;
-    font-family: "Lucida Sans Unicode", "Lucida Grande";
-    user-select: none;
-    width: 0;
-    height: 0;
-    cursor: pointer;
+    overflow: visible;
     z-index: 999999;
+    height: 0;
+    width: 0;
     &-less {
       .lanx {
         &-word,
@@ -125,16 +84,17 @@ $font-color:#222;
     }
   }
   &-main {
+    @include dispadmar(block, 4px 8px 6px, 0);
     position: absolute;
     background-color: $main-background;
     border: 1px solid $main-border-color;
     border-radius: 3px;
     box-shadow: $main-shadow-color 0px 0px 8px;
     min-width: 180px;
-    padding: 4px 8px;
+    height: auto;
   }
   &-head {
-    display: flex;
+    @include dispadmar(flex, 0, 0);
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
@@ -142,15 +102,16 @@ $font-color:#222;
   &-word,
   &-back {
     flex: initial;
+    @include dispadmar(block, 0, 0);
+    font-family: $font-family-text;
     font-weight: 550;
     line-height: $head-line-height;
     font-size: $font-size;
   }
   &-hide {
+    @include dispadmar(block, 0, 0 4px);
     flex: initial;
     line-height: $head-line-height;
-    padding: 0;
-    margin: 0 4px;
     transform: scale(.8);
     position: relative;
     width: 16px;
@@ -159,8 +120,7 @@ $font-color:#222;
     transition: $transition;
     &::before,
     &::after {
-      padding: 0;
-      margin: 0;
+      @include dispadmar(block, 0, 0);
       position: absolute;
       top: 2.5px;
       left: 7px;
@@ -178,13 +138,15 @@ $font-color:#222;
     &:hover {
       &::before,
       &::after {
-        background-color: $hide-background;
+        background-color: $hide-background !important;
       }
     }
   }
   &-mean {
+    @include dispadmar(block, 0, 0);
     flex: initial;
     line-height: $pron-line-height;
+    font-family: $font-family-text;
     font-size: $font-size;
     color: $font-color;
     &::first-line {
@@ -192,10 +154,9 @@ $font-color:#222;
     }
   }
   &-pron {
-    display: flex;
+    @include dispadmar(flex, 0, 4px 0);
     justify-content: center;
     align-items: center;
-    margin: 4px 0;
     &-row {
       flex-flow: row nowrap;
     }
@@ -203,29 +164,36 @@ $font-color:#222;
       flex-flow: column nowrap;
     }
     &-puk {
+      @include dispadmar(block, 0, 0);
       flex: initial;
       color: $pron-uk-color;
+      font-family: $font-family-code;
       white-space: nowrap;
       line-height: 1;
       font-size: $font-size;
     }
     &-pos {
+      @include dispadmar(block, 0, 0 4px);
       flex: initial;
-      margin: 0 4px;
+      font-family: $font-family-code;
       white-space: nowrap;
       line-height: 1;
       font-size: $font-size;
       color: $font-color;
     }
     &-pus {
+      @include dispadmar(block, 0, 0);
       flex: initial;
+      font-family: $font-family-code;
       color: $pron-us-color;
       white-space: nowrap;
       line-height: 1;
       font-size: $font-size;
     }
     &-play {
+      display: inline;
       white-space: nowrap;
+      font-family: $font-family-code;
       line-height: 1;
       font-size: $font-size;
       &[disabled] {
@@ -234,21 +202,20 @@ $font-color:#222;
     }
   }
   &-edit {
-    display: flex;
+    @include dispadmar(flex, 0, 0);
     min-height: 100px;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
   }
   &-area {
+    @include dispadmar(block, 6px, 6px 0 4px);
+    font-family: $font-family-text;
     flex: auto;
-    margin: 6px 0 4px;
     background-color: transparent;
     border: 1px solid $main-shadow-color;
     line-height: $head-line-height;
-    padding: 6px;
     box-sizing: border-box;
-    display: block;
     border-radius: 3px;
     font-size: $font-size;
     width: 100%;
@@ -260,9 +227,10 @@ $font-color:#222;
     }
   }
   &-done {
+    @include dispadmar(block, 6px 9px, 0);
     flex: initial;
+    font-family: $font-family-text;
     line-height: 1;
-    padding: 6px 9px;
     border-radius: 3px;
     font-size: -1px+$font-size;
     transition: $transition;
@@ -294,6 +262,28 @@ $font-color:#222;
     }
   }
   &-none {
-    display: none;
+    display: none !important;
+  }
+}
+
+@keyframes lanx-root-above {
+  from {
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(-12px);
+    opacity: 1;
+  }
+}
+
+@keyframes lanx-root-below {
+  from {
+    transform: translateY(4px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(12px);
+    opacity: 1;
   }
 }

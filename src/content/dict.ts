@@ -1,7 +1,5 @@
 const Dict = document.createElement('div');
 Dict.classList.add('lanx-root');
-Dict.classList.add('lanx-none');
-document.body.appendChild(Dict);
 
 Dict.innerHTML = [
   '<div class="lanx-main">',
@@ -26,8 +24,6 @@ Dict.addEventListener('mouseup', event => {
   event.stopPropagation();
 });
 
-window.addEventListener('resize', () => {
-  Dict.classList.add('lanx-none');
-});
+
 
 export default Dict;

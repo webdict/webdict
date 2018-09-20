@@ -4,8 +4,8 @@ import Dict from './dict';
 
 
 export default function (injector: Injector) {
-  let rentry: Entry;
-  let absoluteRect: Rect;
+  let _entry: Entry = null;
+  let _rect: Rect = null;
   const [
     Main, View,
     Word, Hide,
@@ -20,6 +20,9 @@ export default function (injector: Injector) {
     'area', 'done'
   ].map(id => Dict.querySelector('.lanx-' + id) as HTMLElement);
 
+  window.addEventListener('resize', () => {
+    hideDict();
+  });
 
   Hide.addEventListener('mouseup', event => {
     event.stopPropagation();
@@ -28,13 +31,13 @@ export default function (injector: Injector) {
 
   Word.addEventListener('click', event => {
     event.stopPropagation();
-    if (rentry.family && rentry.family.length > 1) {
-      const qword = rentry.family[(++rentry.index) % rentry.family.length];
-      injector.find({ word: qword, lang: rentry.cleng ? 'zh' : 'en' }, (entry: Entry) => {
+    if (_entry.family && _entry.family.length > 1) {
+      const qword = _entry.family[(++_entry.index) % _entry.family.length];
+      injector.find({ word: qword, lang: _entry.cleng ? 'zh' : 'en' }, (entry: Entry) => {
         if (entry) {
-          entry.family = rentry.family;
-          entry.index = rentry.index;
-          showDict(entry, absoluteRect);
+          entry.family = _entry.family;
+          entry.index = _entry.index;
+          showDict(entry, _rect);
         }
       });
     }
@@ -46,7 +49,7 @@ export default function (injector: Injector) {
     View.classList.add('lanx-none');
     Edit.classList.remove('lanx-none');
     event.stopPropagation();
-    if (pinpoint(absoluteRect)) Area.focus();
+    if (pinpoint(_rect)) Area.focus();
     else {
       Edit.classList.add('lanx-none');
       View.classList.remove('lanx-none');
@@ -57,8 +60,8 @@ export default function (injector: Injector) {
     Edit.classList.add('lanx-none');
     View.classList.remove('lanx-none');
     event.stopPropagation();
-    pinpoint(absoluteRect);
-    (Area as HTMLTextAreaElement).value = rentry.trans;
+    pinpoint(_rect);
+    (Area as HTMLTextAreaElement).value = _entry.trans;
   });
   // on audio playing failed:
   injector.onplayerror = (id: string) => {
@@ -70,20 +73,20 @@ export default function (injector: Injector) {
     View.classList.remove('lanx-none');
     event.stopPropagation();
     const newVal = ((Area as HTMLTextAreaElement).value || '').trim().replace(/\s\s+|[\n\r\t]/g, ' ');
-    if (newVal && newVal !== rentry.trans) {
-      if (newVal.charAt(0) !== '@' || rentry.qword.toLowerCase() === newVal.substr(1).toLowerCase()) {
-        rentry.trans = newVal.charAt(0) !== '@' ? newVal : '[Ref Error]';
-        updateContent(rentry);
-        pinpoint(absoluteRect);
-        injector.post({ query: rentry.qword, newVal });
+    if (newVal && newVal !== _entry.trans) {
+      if (newVal.charAt(0) !== '@' || _entry.qword.toLowerCase() === newVal.substr(1).toLowerCase()) {
+        _entry.trans = newVal.charAt(0) !== '@' ? newVal : '[Ref Error]';
+        updateContent(_entry);
+        pinpoint(_rect);
+        injector.post({ query: _entry.qword, newVal });
       } else {
-        injector.post({ query: rentry.qword, newVal }, (trans: string) => {
-          rentry.trans = trans;
-          updateContent(rentry);
-          pinpoint(absoluteRect);
+        injector.post({ query: _entry.qword, newVal }, (trans: string) => {
+          _entry.trans = trans;
+          updateContent(_entry);
+          pinpoint(_rect);
         });
       }
-    } else pinpoint(absoluteRect);
+    } else pinpoint(_rect);
   };
   Done.addEventListener('click', listener);
 
@@ -195,11 +198,11 @@ export default function (injector: Injector) {
       bottom: aRect.bottom - y
     };
     if (Math.max(document.documentElement.clientWidth, document.documentElement.offsetWidth) < Main.offsetWidth) {
-      Dict.classList.add('lanx-none');
+      hideDict();
       return false;
     }
     if (rRect.left < 0 || rRect.right > document.documentElement.clientWidth) {
-      Dict.classList.add('lanx-none');
+      hideDict();
       return false;
     }
     const margin = 14;
@@ -208,7 +211,7 @@ export default function (injector: Injector) {
     above = above || !below && rRect.top + y >= Main.offsetHeight + margin;
     below = (above || below) || Math.max(document.documentElement.offsetHeight, document.documentElement.clientHeight) - rRect.bottom >= Main.offsetHeight + margin;
     if (!(above || below)) {
-      Dict.classList.add('lanx-none');
+      hideDict();
       return false;
     }
 
@@ -242,15 +245,23 @@ export default function (injector: Injector) {
   }
 
   function showDict(entry: Entry, rect: Rect) {
-    updateContent(rentry = entry);
-    return pinpoint(absoluteRect = rect);
+    updateContent(_entry = entry);
+    return pinpoint(_rect = rect);
   }
 
   function hideDict() {
     Dict.classList.add('lanx-none');
+    _entry = null;
+    _rect = null;
   }
 
   function tryToShowDict(text: string, rect: Rect) {
+    if (_rect && ['left', 'right', 'top', 'bottom'].every(key => _rect[key] === rect[key])) {
+      return;
+    }
+    if (!document.querySelector('.lanx-root')) {
+      document.body.appendChild(Dict);
+    }
     const qword = text.substr(2);
     const lang = text.substr(0, 2);
 

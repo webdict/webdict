@@ -1,7 +1,8 @@
+**/package-lock.json
 **/node_modules
 **/__pycache__
-**/dist
 **/.DS_Store
-**/package-lock.json
 src/**/*.css
 src/**/*.js
+**/*.zip
+**/dist

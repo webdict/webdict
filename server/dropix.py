@@ -1,9 +1,7 @@
-'''module docstring'''
+from cursor import cursor
 
 
-# pylint: disable=R0912, R0915
-def drop_suffix(wlist: [str], index: int):
-    '''function docstring'''
+def _drop_suffix(wlist, index):
     word = wlist[index]
     low = word.lower()
     if '’' in low:
@@ -63,11 +61,10 @@ def drop_suffix(wlist: [str], index: int):
         wlist.append(word[:-3])
 
     if len(wlist) > index + 1:
-        drop_suffix(wlist, index + 1)
+        _drop_suffix(wlist, index + 1)
 
 
-def drop_prefix(wlist: [str], index: int):
-    '''function docstring'''
+def _drop_prefix(wlist, index):
     word = wlist[index]
     low = word.lower()
     if low[:2] in ('im', 'in', 'un', 'il', 'ac', 're', 'de', 'ex', 'en', 'al'):
@@ -75,15 +72,19 @@ def drop_prefix(wlist: [str], index: int):
     elif low[:3] in ('mis', 'dis'):
         wlist.append(word[3:])
     if len(wlist) > index + 1:
-        drop_prefix(wlist, index + 1)
+        _drop_prefix(wlist, index + 1)
 
 
-def fork_word(word: str):
-    '''function docstring'''
+def dropix(word):
     wlist = [word]
-    drop_suffix(wlist, 0)
-    drop_prefix(wlist, 0)
-    return list(filter(lambda x: len(x) > 1, wlist))
-
-
-__all__ = ['fork_word']
+    _drop_suffix(wlist, 0)
+    _drop_prefix(wlist, 0)
+    sql = "SELECT DISTINCT word FROM pron_table WHERE word COLLATE NOCASE IN('%s') ORDER BY word"
+    cursor.execute(sql % "', '".join(w for w in wlist if len(w) > 1))
+    der = {}
+    for w in (r[0] for r in cursor):
+        if w.lower() in der:
+            der[w.lower()].append(w)
+        else:
+            der[w.lower()] = [w]
+    return [x for k in wlist if k in der for x in der[k]]

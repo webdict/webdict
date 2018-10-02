@@ -1,8 +1,4 @@
-# 请以行为单位编辑本文件，但以 # 开头到行尾注释
-# 空白行也会被自动忽略，行内的空白符也会被忽略
-
-argument = argue
-say = says $ said $ said $ saying
-sit = sits $ sat $ sit $ sitting
-color = colour $ colorful $ colourful
-sleep = sleeps $ slept $ slept $ sleeping
+sleep = slept = slept
+tell = told = told
+say = said = said
+sit = sat = sit

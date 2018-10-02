@@ -212,7 +212,7 @@
     @include dispadmar(block, 6px, 6px 0 4px);
     font-family: $font-family-text;
     flex: auto;
-    background-color: transparent;
+    background-color: $main-background;
     border: 1px solid $main-shadow-color;
     line-height: $head-line-height;
     box-sizing: border-box;

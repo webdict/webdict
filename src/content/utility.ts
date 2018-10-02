@@ -41,7 +41,7 @@ export function legalWord(word: string) {
 }
 
 export function shorten(text: string | null | undefined): string | null {
-  if (!text || text.length > 99) return null;
+  if (!text || text.length > 99 || text.includes('\n')) return null;
   let max = 0;
   let len = 0;
   let count = 0;

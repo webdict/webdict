@@ -1,6 +1,8 @@
-const ZH_URL = 'http://120.78.146.219/static/pron/zh/';
-const UK_URL = 'http://120.78.146.219/static/pron/uk/';
-const US_URL = 'http://120.78.146.219/static/pron/us/';
+import { host } from './fetch';
+
+const ZH_URL = `${host}/static/pron/zh/`;
+const UK_URL = `${host}/static/pron/uk/`;
+const US_URL = `${host}/static/pron/us/`;
 
 
 const map: { [id: string]: HTMLAudioElement | undefined } = Object.create(null);

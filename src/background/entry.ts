@@ -1,10 +1,10 @@
 import * as trans from './trans';
 import { Entry, ServerEntry } from '../shared/typings';
+import { host } from './fetch';
 
 
-
-const Q_URL = 'http://120.78.146.219/q/';
-const F_URL = '1/f/';
+const Q_URL = `${host}/q/`;
+const F_URL = `${host}/f/`;
 const VERSION = '1';
 
 

@@ -5,4 +5,6 @@
 src/**/*.css
 src/**/*.js
 **/*.zip
+**/*.txt
+**/*.db
 **/dist

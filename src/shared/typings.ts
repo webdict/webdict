@@ -1,64 +1,22 @@
-export interface BaseEntry {
-  trans?: string; // when: 1. not exist => [Not Found]
-  poses: string[]; // must directly return from server.
-  count: number; // must directly return from server
 
-  next?: string;
-  link?: { href: string, title: string, html: string, color?: string };
+export interface Entry {
+  word: string;
+  data: {
+    lang: 'en' | 'zh-han' | 'zh-yue' | string,
+    pron: [string, string, string],
+    mean: string
+  }[];
 }
 
-export interface ServerEntry extends BaseEntry {
-  // from server:
-  family?: Array<number | string>; // when: 1. length===1, not exist; 2. cleng, number[]; 3. !cleng, string[];
-  qword?: string; // when cleng: not exist
-  cleng?: number; // when English: not exist
+export interface Rect {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
 }
-
-export interface Entry extends ServerEntry {
-  family?: string[];
-  index?: number;
-  trans: string;
-  qword: string;
-}
-
-export const enum Action {
-  defClicked,
-  applyDef,
-  applyAtDef,
-
-  userClosed,
-  resizeClosed,
-
-  playAudioZH,
-  playAudioUK,
-  playAudioUS,
-  playAudioFailed,
-
-  familyQueried,
-  zhQueried,
-  enQueried
-};
-
-export interface Rect { left: number; right: number; top: number; bottom: number; }
 
 export interface Injector {
-  onplayerror?: (id: string) => void;
-  find(data: { word: string, lang: 'zh' | 'en' }, cb: (entry: Entry) => void): void;
-  play(data: { play: string }): void;
-  post(data: { query: string, newVal: string }, cb?: (trans: string) => void): void;
-}
-
-interface EnPron {
-  uk: string;
-  us: string;
-}
-interface ZhPron {
-  type: 'han' | 'yue';
-  pinv: string;
-}
-interface EntryItem {
-  head: string;
-  lang: 'zh' | 'en';
-  mean: string;
-  pron: EnPron[] | ZhPron[]
+  search(data: { text: string, lang: 'zh' | 'en' }, callback: (entries: Entry[]) => void): void;
+  define(data: { word: string, lang: 'zh' | 'en' }): void;
+  playme(data: { code: string }): void;
 }

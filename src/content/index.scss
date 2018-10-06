@@ -1,5 +1,4 @@
 @import 'vars';
-
 .lanx {
   &-root {
     @include dispadmar(block, 0, 0);
@@ -22,6 +21,11 @@
             background-color: $hide-less-color;
           }
         }
+        @for $i from 0 through 9 {
+          &-pron-#{$i}:hover~.lanx-head .lanx-mean-#{$i} {
+            color: $pron-uk-color;
+          }
+        }
       }
     }
     &-more {
@@ -36,6 +40,11 @@
           &::before,
           &::after {
             background-color: $hide-more-color;
+          }
+        }
+        @for $i from 0 through 9 {
+          &-pron-#{$i}:hover~.lanx-head .lanx-mean-#{$i} {
+            color: $pron-us-color;
           }
         }
       }
@@ -84,7 +93,8 @@
     }
   }
   &-main {
-    @include dispadmar(block, 4px 8px 6px, 0);
+    @include dispadmar(flex, 4px 8px 6px, 0);
+    flex-flow: column nowrap;
     position: absolute;
     background-color: $main-background;
     border: 1px solid $main-border-color;
@@ -95,6 +105,7 @@
   }
   &-head {
     @include dispadmar(flex, 0, 0);
+    order: -1;
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
@@ -151,6 +162,9 @@
     color: $font-color;
     &::first-line {
       line-height: $head-line-height;
+    }
+    span {
+      transition: $transition;
     }
   }
   &-pron {

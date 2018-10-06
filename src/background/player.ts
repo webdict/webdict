@@ -1,4 +1,4 @@
-import { host } from './fetch';
+import { host } from '../fetch';
 
 const ZH_URL = `${host}/static/pron/zh/`;
 const UK_URL = `${host}/static/pron/uk/`;
@@ -15,19 +15,19 @@ const map: { [id: string]: HTMLAudioElement | undefined } = Object.create(null);
  * 
  * `onerror` when playing failed.
  */
-export default function play(id: string, onerror: (id: string) => void) {
-  const oldAudio = map[id];
+export default function play(code: string, onerror: (data: { code: string }) => void) {
+  const oldAudio = map[code];
   if (oldAudio) {
     if (oldAudio.getAttribute('disabled')) {
-      if (onerror) onerror(id);
+      if (onerror) onerror({ code });
     } else {
       oldAudio.play();
     }
   } else {
-    const newAudio = map[id] = document.createElement('audio');
+    const newAudio = map[code] = document.createElement('audio');
     newAudio.preload = 'auto';
     newAudio.autoplay = true;
-    const [lang, url] = id.split(':');
+    const [lang, url] = code.split(':');
     if (lang === 'zh') {
       newAudio.src = ZH_URL + url + '.ogg';
     } else if (lang === 'uk') {
@@ -38,7 +38,7 @@ export default function play(id: string, onerror: (id: string) => void) {
     newAudio.onerror = (event: ErrorEvent) => {
       event.stopPropagation();
       newAudio.setAttribute('disabled', 'disabled');
-      if (onerror) onerror(id);
+      if (onerror) onerror({ code });
     };
   }
 }

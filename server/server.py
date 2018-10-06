@@ -4,6 +4,7 @@ from json import dumps
 import worker
 
 
+
 app = Flask(__name__)
 
 
@@ -14,6 +15,24 @@ def add_headers(res):
     res.headers['Access-Control-Allow-Credentials'] = 'true'
     res.headers['Content-Type'] = 'application/json'
     return res
+
+
+@app.route('/dict/api/v1/search/<lang>/<text>')
+def search(lang, text):
+    if lang == 'en':
+        return dumps(worker.search_en(text), ensure_ascii=False)
+    elif lang == 'zh':
+        return dumps(worker.search_zh(text), ensure_ascii=False)
+    return '[]'
+
+
+@app.route('/dict/api/v1/lookup/<lang>/<word>')
+def lookup(lang, word):
+    if lang == 'en':
+        return '{}'
+    elif lang == 'zh':
+        return '{}'
+    return '{}'
 
 
 @app.route('/q/<text>')

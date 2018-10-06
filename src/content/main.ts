@@ -2,29 +2,27 @@ import { Injector, Entry } from '../shared/typings';
 
 import inject from './ctrler';
 import './index.scss';
-// import { insertStorage } from '../shared/storage';
 
 const injector: Injector = {
-  play(data) {
+  playme(data) {
     chrome.runtime.sendMessage({ action: 'PLAY_SOUND', data });
   },
-  find(data: { word: string, lang: 'en' | 'zh' }, cb: (entry: Entry) => void) {
-    chrome.runtime.sendMessage({ action: 'FIND_WORD', data }, cb);
+  search(data: { text: string, lang: 'en' | 'zh' }, cb: (entries: Entry[]) => void) {
+    chrome.runtime.sendMessage({ action: 'SEARCH_TEXT', data }, cb);
   },
-  post(data, cb?) {
-    if (cb) chrome.runtime.sendMessage({ action: 'POST_WORD', data }, cb);
-    else chrome.runtime.sendMessage({ action: 'POST_WORD', data });
+  define(data: { word: string, lang: 'en' | 'zh' }) {
+    chrome.runtime.sendMessage({ action: 'DEFINE_WORD', data });
   }
 };
 
-const setEnable = inject(injector);
+const { setDictStatus, onPlayError } = inject(injector);
 
 
 chrome.runtime.onMessage.addListener(({ action, data }) => {
   if (action === 'PLAY_ERROR') {
-    if (injector.onplayerror) injector.onplayerror(data);
+    onPlayError(data);
   } else if (action === 'STOP_FIND') {
-    setEnable(false);
+    setDictStatus(false);
   } else if (action === 'ADD_NOTE') {
     const noteText = window.getSelection().toString().trim();
     if (noteText) {

@@ -1,7 +1,5 @@
-// import { updateStorage } from '../shared/storage';
 import { Rect, Injector } from '../shared/typings';
 import inject from './popup';
-// import { dePinv, dePron } from './coder';
 import { shorten, staticText } from './utility';
 
 
@@ -11,8 +9,7 @@ export default function (injector: Injector) {
 
   let mouseupEnabled = true;
   let dictEnabled = true;
-  let mousedownTargetIsInput = false;
-  
+
   function capture(): [string | null, Rect | null] {
     try {
       const sele = window.getSelection();
@@ -32,18 +29,15 @@ export default function (injector: Injector) {
             top: rect.top + y
           }];
       }
-    } catch(e) { }
+    } catch (e) { }
     return [null, null];
   }
-  const input = Dict.input;
 
   document.addEventListener('mousedown', ({ target }) => {
     mouseupEnabled = dictEnabled && staticText(target);
-    mousedownTargetIsInput = target === input;
   }, true);
 
   document.addEventListener('mouseup', ({ target }) => {
-    if (mousedownTargetIsInput) return;
     if (mouseupEnabled && staticText(target)) {
       if (target !== document) {
         const [text, rect] = capture();
@@ -54,9 +48,12 @@ export default function (injector: Injector) {
     } else Dict.hideDict();
   });
 
-  return function (enable: boolean) {
-    dictEnabled = enable;
-  };
+  return {
+    onPlayError: Dict.onPlayError,
+    setDictStatus(enabled: boolean) {
+      dictEnabled = enabled;
+    }
+  }
 
 }
 

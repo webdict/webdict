@@ -7,6 +7,8 @@ export default function (injector: Injector) {
 
   const Dict = inject(injector);
 
+  let mousedownTargetIsNotLanxEdit = true;
+  let deckeyDisabled = true;
   let mouseupEnabled = true;
   let dictEnabled = true;
 
@@ -35,23 +37,35 @@ export default function (injector: Injector) {
 
   document.addEventListener('mousedown', ({ target }) => {
     mouseupEnabled = dictEnabled && staticText(target);
+    try {
+      mousedownTargetIsNotLanxEdit = !(target as any).classList.contains('lanx-edit');
+    } catch (e) {
+      mousedownTargetIsNotLanxEdit = true;
+    }
   }, true);
 
-  document.addEventListener('mouseup', ({ target }) => {
-    if (mouseupEnabled && staticText(target)) {
+  document.addEventListener('mouseup', ({
+    target, shiftKey, ctrlKey, altKey, metaKey
+  }) => {
+    if ((deckeyDisabled || shiftKey || ctrlKey || metaKey || altKey) && mouseupEnabled && staticText(target)) {
       if (target !== document) {
         const [text, rect] = capture();
         if (text) {
           Dict.tryToShowDict(text, rect as Rect);
         } else Dict.hideDict();
       }
-    } else Dict.hideDict();
+    } else if (mousedownTargetIsNotLanxEdit) Dict.hideDict();
   });
 
   return {
     onPlayError: Dict.onPlayError,
-    setDictStatus(enabled: boolean) {
-      dictEnabled = enabled;
+    setDictStatus(dict: boolean, deckey: boolean) {
+      if (dict) {
+        return dictEnabled = !dictEnabled;
+      }
+      if (deckey) {
+        return deckeyDisabled = !deckeyDisabled;
+      }
     }
   }
 

@@ -16,6 +16,15 @@
   ],
   "plugins": [
     [
+      "import",
+      [
+        {
+          "libraryName": "antd",
+          "style": "css"
+        }
+      ]
+    ],
+    [
       "transform-runtime",
       {
         "helpers": false,

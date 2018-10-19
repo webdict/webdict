@@ -7,6 +7,11 @@
     z-index: 999999;
     height: 0;
     width: 0;
+    @for $i from 1 through 9 {
+      &-tada-#{$i}>div {
+        opacity: 0.1*$i;
+      }
+    }
     &-less {
       .lanx {
         &-word,
@@ -93,8 +98,8 @@
     }
   }
   &-main {
-    @include dispadmar(flex, 4px 8px 6px, 0);
-    flex-flow: column nowrap;
+    transition: $transition;
+    @include dispadmar(block, 4px 8px 6px, 0);
     position: absolute;
     background-color: $main-background;
     border: 1px solid $main-border-color;
@@ -102,6 +107,10 @@
     box-shadow: $main-shadow-color 0px 0px 8px;
     min-width: 180px;
     height: auto;
+  }
+  &-view {
+    @include dispadmar(flex, 0, 0);
+    flex-flow: column nowrap;
   }
   &-head {
     @include dispadmar(flex, 0, 0);
@@ -171,6 +180,11 @@
     @include dispadmar(flex, 0, 4px 0);
     justify-content: center;
     align-items: center;
+    & span {
+      font-family: $font-family-code;
+      line-height: 1;
+      font-size: $font-size;
+    }
     &-row {
       flex-flow: row nowrap;
     }
@@ -215,37 +229,49 @@
       }
     }
   }
-  &-edit {
+  &-form {
     @include dispadmar(flex, 0, 0);
     min-height: 100px;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
   }
-  &-area {
-    @include dispadmar(block, 6px, 6px 0 4px);
+  &-back {
+    margin-bottom: 6px;
+  }
+  &-edit {
+    @include dispadmar(block, 2px 3px, 0);
     font-family: $font-family-text;
-    flex: auto;
     background-color: $main-background;
     border: 1px solid $main-shadow-color;
     line-height: $head-line-height;
     box-sizing: border-box;
     border-radius: 3px;
     font-size: $font-size;
-    width: 100%;
-    resize: none;
     color: $font-color;
+    width: 100%;
+  }
+  &-area {
+    flex: auto;
+    resize: none;
+    overflow: -moz-scrollbars-none;
+    -ms-overflow-style: none;
     &::-webkit-scrollbar {
-      width: 0;
-      height: 0;
+      display: none;
     }
   }
+  &-line+&-line {
+    margin-top: 4px;
+  }
   &-done {
-    @include dispadmar(block, 6px 9px, 0);
+    @include dispadmar(block, 6px 9px, 4px 0 0);
     flex: initial;
     font-family: $font-family-text;
+    background: none;
     line-height: 1;
     border-radius: 3px;
+    border: none;
+    outline: none;
     font-size: -1px+$font-size;
     transition: $transition;
     &:hover {
@@ -253,6 +279,7 @@
     }
   }
   &-foot {
+    transition: $transition;
     position: absolute;
     left: 50%;
     width: 0;
@@ -283,21 +310,17 @@
 @keyframes lanx-root-above {
   from {
     transform: translateY(-4px);
-    opacity: 0;
   }
   to {
     transform: translateY(-12px);
-    opacity: 1;
   }
 }
 
 @keyframes lanx-root-below {
   from {
     transform: translateY(4px);
-    opacity: 0;
   }
   to {
     transform: translateY(12px);
-    opacity: 1;
   }
 }

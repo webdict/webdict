@@ -58,7 +58,6 @@ export function shorten(text: string | null | undefined): string | null {
         if (text.charAt(len) === '.') len++;
         break;
       }
-
     }
     len++;
   }

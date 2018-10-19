@@ -6,18 +6,24 @@ import Dict from './dict';
 
 export default function (injector: Injector) {
   let _entries: Entry[] = [];
-  let _rect: Rect = null;
+  let _rect: Rect = null!;
+  let _enterCount = 3;
   let _index = 0;
   const [
-    Main, Word, Hide, Mean, Head
+    Main, View, Word, Hide,
+    Mean, Form, Back, Done
   ] = [
-    'main', 'word', 'hide', 'mean', 'head'
+    'main', 'view', 'word', 'hide',
+    'mean', 'form', 'back', 'done'
   ].map(id => Dict.querySelector('.lanx-' + id) as HTMLElement);
 
   window.addEventListener('resize', () => {
     hideDict();
   });
-
+  Dict.addEventListener('mouseenter', () => {
+    Dict.classList.remove(`lanx-root-tada-${_enterCount}`);
+    _enterCount *= 2;
+  });
   Hide.addEventListener('mouseup', event => {
     event.stopPropagation();
     hideDict();
@@ -31,17 +37,36 @@ export default function (injector: Injector) {
     }
   });
 
-  Mean.addEventListener('click', event => {
+  Mean.addEventListener('click'/*'dblclick'*/, event => {
     event.stopPropagation();
-    const entry = _entries[_index];
-    injector.define({
-      word: entry.word,
-      lang: entry.data[0].lang.slice(0, 2) as 'en' | 'zh'
-    });
-    hideDict();
+    View.classList.add('lanx-none');
+    Form.classList.remove('lanx-none');
+    if (!pinpoint(_rect)) hideDict();
   });
 
 
+  Form.addEventListener('submit', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    const mean = Array.from(Form.querySelectorAll('.lanx-edit') as NodeListOf<HTMLInputElement>)
+      .reduce((data, { value, name, defaultValue: deval }) => {
+        value = value.trim();
+        deval = deval.trim();
+        if (value && value !== deval) {
+          data[name] = value;
+        }
+        return data;
+      }, {});
+    injector.define({ word: _entries[_index].word, mean });
+    hideDict();
+  });
+
+  Back.addEventListener('click', event => {
+    Form.classList.add('lanx-none');
+    View.classList.remove('lanx-none');
+    event.stopPropagation();
+    pinpoint(_rect);
+  });
   function ensurePronItem(pron: HTMLElement, count: number) {
     let childCount = pron.childElementCount - 1;
     const divs = new Array<HTMLElement>();
@@ -63,7 +88,7 @@ export default function (injector: Injector) {
         const div = document.createElement('div');
         div.classList.add('lanx-pron');
         div.classList.add('lanx-pron-' + childCount);
-        pron.insertBefore(div, Head);
+        pron.insertBefore(div, pron.lastChild);
         for (const clazz of ['puk', 'pos', 'pus']) {
           const span = document.createElement('div');
           span.classList.add('lanx-pron-' + clazz);
@@ -78,24 +103,31 @@ export default function (injector: Injector) {
 
   function updateContent(entry: Entry) {
     Dict.classList.remove('lanx-none');
+    View.classList.remove('lanx-none');
+    Form.classList.add('lanx-none');
     Word.innerText = entry.word;
+    if (_enterCount < 10) {
+      Dict.classList.add(`lanx-root-tada-${_enterCount}`);
+    }
     if (_entries.length > 1) {
       Dict.classList.remove('lanx-root-less');
       Dict.classList.add('lanx-root-more');
       const last = _index + 1 === _entries.length;
-      Word.setAttribute('title', `${last ? '第一词' : '下一词'} » [${_entries[last ? 0 : _index + 1].word}]`);
+      Word.setAttribute('title', `${last ? '第一词' : '下一词'} » [${_entries[last ? 0 : _index + 1].word}]`
+      );
     } else {
       Dict.classList.remove('lanx-root-more');
       Dict.classList.add('lanx-root-less');
       Word.setAttribute('title', '词条');
     }
+    // update prons
     const meand = new Map<string, number[]>();
-    ensurePronItem(Main, entry.data.length).forEach((div, c) => {
-      const { mean, lang, pron } = entry.data[c];
+    ensurePronItem(View, entry.data.length).forEach((div, idx) => {
+      const { mean, lang, pron } = entry.data[idx];
       if (meand.has(mean)) {
-        meand.get(mean).push(c);
+        meand.get(mean)!.push(idx);
       } else if (mean) {
-        meand.set(mean, [c]);
+        meand.set(mean, [idx]);
       }
       for (let p = 0; p < 3; p++) {
         const span = div.children[p];
@@ -121,7 +153,7 @@ export default function (injector: Injector) {
             button.addEventListener('mouseup', event => {
               event.stopPropagation();
               const el = event.target as HTMLElement;
-              injector.playme({ code: el.dataset.code });
+              injector.playme({ code: el.dataset.code! });
             });
             button.setAttribute('title', `播放${mark} » [${button.innerText}]`);
           });
@@ -134,18 +166,35 @@ export default function (injector: Injector) {
         div.classList.add('lanx-pron-row');
       }
     });
+    // update mean
     Mean.innerHTML = Array.from(meand).map(([mean, nums], index) =>
       meand.size > 1
         ? `<span class="${nums.map(n => `lanx-mean-${n}`).join(' ')}">${mean}${
         index < meand.size - 1
-          ? mean.slice(-1) > '\u0100'
-            ? '；'
-            : ';'
-          : ''
+          ? mean.slice(-1) > '\u0100' ? '；' : ';' : ''
         }</span>`
         : mean
     ).join('') || '[Not Defined]';
+    // update form
+    const data = entry.data.map(({ lang, pron, mean }) => {
+      const [uk, os, us] = pron;
+      return os.split(SECRET).map(os => ({
+        lang, pron: [uk, os, us], mean
+      }));
+    }).reduce((a, b) => a.concat(b));
 
+    Back.innerText = entry.word;
+    Form.querySelectorAll('.lanx-edit').forEach(line => {
+      Form.removeChild(line);
+    });
+    Done.insertAdjacentHTML('beforebegin', data.length < 2
+      // TODO: support only mean
+      ? `<textarea class="lanx-edit lanx-area" name="${data[0].lang}">${data[0].mean}</textarea>`
+      : data.map(({ lang, pron, mean }) => {
+        const text = postitle(lang === 'en' ? pron[1] : lang);
+        return `<input class="lanx-edit lanx-line" name="${lang === 'en' ? 'en-' + pron[1] : lang}" value="${mean.replace(/"/g, '&quot;')}" placeholder="${text}" title="${text}" />`
+      }).join('')
+    );
   }
 
   function pinpoint(aRect: Rect): boolean {
@@ -156,29 +205,29 @@ export default function (injector: Injector) {
       top: aRect.top - y,
       bottom: aRect.bottom - y
     };
-    if (Math.max(document.documentElement.clientWidth, document.documentElement.offsetWidth) < Main.offsetWidth) {
+    if (Math.max(document.documentElement!.clientWidth, document.documentElement!.offsetWidth) < Main.offsetWidth) {
       hideDict();
       return false;
     }
-    if (rRect.left < 0 || rRect.right > document.documentElement.clientWidth) {
+    if (rRect.left < 0 || rRect.right > document.documentElement!.clientWidth) {
       hideDict();
       return false;
     }
     const margin = 14;
     let above = rRect.top >= Main.offsetHeight + margin;
-    let below = above || document.documentElement.clientHeight - rRect.bottom >= Main.offsetHeight + margin;
+    let below = above || document.documentElement!.clientHeight - rRect.bottom >= Main.offsetHeight + margin;
     above = above || !below && rRect.top + y >= Main.offsetHeight + margin;
-    below = (above || below) || Math.max(document.documentElement.offsetHeight, document.documentElement.clientHeight) - rRect.bottom >= Main.offsetHeight + margin;
+    below = (above || below) || Math.max(document.documentElement!.offsetHeight, document.documentElement!.clientHeight) - rRect.bottom >= Main.offsetHeight + margin;
     if (!(above || below)) {
       hideDict();
       return false;
     }
 
     let middle = rRect.left + rRect.right;
-    let total = document.documentElement.clientWidth;
+    let total = document.documentElement!.clientWidth;
     if (total < Main.offsetWidth) {
       middle += x;
-      total = Math.max(total, document.documentElement.offsetWidth);
+      total = Math.max(total, document.documentElement!.offsetWidth);
     }
     if (middle >= Main.offsetWidth) {
       const offset = Main.offsetWidth + middle - 2 * total;
@@ -209,14 +258,18 @@ export default function (injector: Injector) {
   }
 
   function hideDict() {
+    if (_enterCount < 10 && _enterCount > 1 && Dict.classList.contains(`lanx-root-tada-${_enterCount}`)) {
+      Dict.classList.remove(`lanx-root-tada-${_enterCount}`);
+      _enterCount--;
+    }
     Dict.classList.add('lanx-none');
     _entries = [];
-    _rect = null;
+    _rect = null!;
     _index = 0;
   }
 
   function tryToShowDict(text: string, rect: Rect) {
-    if (_rect && ['left', 'right', 'top', 'bottom'].every(key => _rect[key] === rect[key])) {
+    if (_rect && ['left', 'right', 'top', 'bottom'].every(key => (_rect as any)[key] === (rect as any)[key])) {
       return;
     }
     if (!document.querySelector('.lanx-root')) {
@@ -235,8 +288,8 @@ export default function (injector: Injector) {
   return {
     hideDict,
     tryToShowDict,
-    onPlayError({ code }) {
-      const target = Main.querySelector(`[data-code="${code}"]`) as HTMLElement;
+    onPlayError({ code }: { code: string }) {
+      const target = View.querySelector(`[data-code="${code}"]`) as HTMLElement;
       if (target) {
         target.setAttribute('disabled', 'disabled');
         target.setAttribute('title', '播放失败');

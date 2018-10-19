@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener(({ action, data }, sender, sendRes) => {
       return false;
     case 'PLAY_SOUND':
       play(data.code, data => {
-        chrome.tabs.sendMessage(sender.tab.id, { action: 'PLAY_ERROR', data });
+        chrome.tabs.sendMessage(sender.tab!.id!, { action: 'PLAY_ERROR', data });
       });
       return false;
     case 'SEARCH_TEXT':
@@ -20,9 +20,8 @@ chrome.runtime.onMessage.addListener(({ action, data }, sender, sendRes) => {
       });
       return true;
     case 'DEFINE_WORD':
-      const { lang, word } = data;
-      const url = chrome.runtime.getURL('console.html') + `#/define/${lang}/${word}`;
-      chrome.tabs.create({ url });
+      const { mean, word } = data;
+      console.log(word, mean);
       return false;
     default:
       return false;

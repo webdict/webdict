@@ -1,4 +1,4 @@
-const urld = {
+const urld: any = {
     'ajax.googleapis.com': 'ajax.lug.ustc.edu.cn',
     'themes.googleusercontent.com': 'google-themes.lug.ustc.edu.cn'
 };

@@ -5,17 +5,16 @@ interface State {
   data: any[];
 }
 
-export default class Define extends React.Component<Props, State>{
-  constructor(props) {
+export default class Index extends React.Component<Props, State>{
+  constructor(props: Props) {
     super(props);
     this.state = {
       data: []
     };
   }
   render() {
-    const { lang, word } = this.props.match.params as any;
     return (
-      <div>{lang}, {word}</div>
+      <div>Hello, world!</div>
     );
   }
 }

@@ -1,22 +1,37 @@
 data = {
-    'FIRST_WORD': {
-        'en': 'First',
-        'zh': '第一词',
-        'zh_TW': '第一词',
-        'zh_HK': '第一词',
-        'zh_MO': '第一词'
+    'name': {
+        'en': 'webdict',
+        'zh': '网词在用',
+        # 'zh_TW': '网词在用',
+        # 'zh_HK': '网词在用',
+        # 'zh_MO': '网词在用'
     },
-    'NEXT_WORD': {
-        'en': 'Next',
-        'zh': '下一词',
-        'zh_TW': '下一词',
-        'zh_HK': '下一词',
-        'zh_MO': '下一词'
+    'description': {
+        'en': 'webdict - Play with the Web!',
+        'zh': '网词在用 - 随时随地，再无生词！'
     },
+    'browserActionDisabledTitle': {
+        'en': 'Enable webdict',
+        'zh': '启用网词'
+    },
+    'browserActionEnabledTitle': {
+        'en': 'Disable webdict',
+        'zh': '停用网词'
+    },
+    'addNote': {
+        'en': 'Add to Notebook',
+        'zh': '保存到笔记本'
+    },
+    'reportBug': {
+        'en': 'Report Page Bug',
+        'zh': '报告显示错误'
+    }
 }
 
 
 def main():
+    from os.path import exists
+    from os import makedirs
     from json import dump
     locales = {locale for head in data for locale in data[head]}
     locales.discard('description')
@@ -30,6 +45,8 @@ def main():
         localed[locale] = content
     for locale in localed:
         path = 'src/copy/_locales/'+locale
+        if not exists(path):
+            makedirs(path)
         with open(path+'/messages.json', mode='w', encoding='utf-8') as f:
             dump(localed[locale], f, ensure_ascii=False, indent=2)
 

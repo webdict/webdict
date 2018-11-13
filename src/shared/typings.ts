@@ -1,4 +1,4 @@
-interface Pron {
+export interface Pron {
   lang: 'en' | 'zh-han' | 'zh-han_*' | 'zh-yue' | 'zh-yue_*' | string;
   pron: [string, string, string];
   mean: string;
@@ -17,7 +17,15 @@ export interface Rect {
 }
 
 export interface Injector {
-  search(data: { text: string, lang: 'zh' | 'en' }, callback: (entries: Entry[]) => void): void;
-  define(data: { word: string, mean: any }): void;
-  playme(data: { code: string }): void;
+  search(data: { text: string, lang: 'zh' | 'en' }, callback: (entries: WordData[]) => void);
+  define(data: { word: string, data: any });
+  playme(data: { code: string });
+  viewed(data: Entry);
+}
+
+export interface WordData {
+  word: string;
+  data: {
+    [mark: string]: string[]
+  };
 }

@@ -1,4 +1,3 @@
-
 function detect(char: string) {
   const code = char.charCodeAt(0);
   if (code < 128) {
@@ -41,7 +40,7 @@ export function legalWord(word: string) {
 }
 
 export function shorten(text: string | null | undefined): string | null {
-  if (!text || text.length > 99 || text.includes('\n')) return null;
+  if (!text || text.length > 64 || text.includes('\n')) return null;
   let max = 0;
   let len = 0;
   let count = 0;
@@ -62,7 +61,7 @@ export function shorten(text: string | null | undefined): string | null {
     len++;
   }
   if (max === 1 && len === 1) return null;
-  return (max === 2 ? 'zh' : 'en') + text.substr(0, len).replace("'", '’');
+  return (max === 2 ? 'zh' : 'en') + text.substr(0, Math.min(len, 32)).replace("'", '’');
 }
 
 export function staticText(element: any) {
@@ -76,4 +75,9 @@ export function staticText(element: any) {
     element = element.parentNode as HTMLElement;
   }
   return true;
+}
+
+
+export function removeATag(text) {
+  return text.replace(/<\/?a[^>]*>/g, '');
 }

@@ -1,23 +1,25 @@
-export default (pos: string) => {
-  if (pos.startsWith('zh-han-CN')) {
-    return '简体中国';
+export default (mark: string) => {
+  if (mark.startsWith('han-CN')) {
+    return '简体中国';
   }
-  if (pos.startsWith('zh-han-TW')) {
-    return '繁体台湾';
+  if (mark.startsWith('han-TW')) {
+    return '繁體臺灣';
   }
-  if (pos.startsWith('zh-han-HK')) {
-    return '繁体香港';
+  if (mark.startsWith('han-HK')) {
+    return '繁體香港';
   }
-  if (pos.startsWith('zh-han-MO')) {
-    return '繁体澳门';
+  if (mark.startsWith('han-MO')) {
+    return '繁體澳門';
   }
-  if (pos.startsWith('zh-han')) {
+  if (mark.startsWith('han')) {
     return '汉语';
   }
-  if (pos.startsWith('zh-yue')) {
+  if (mark.startsWith('yue')) {
     return '粤语';
   }
-  switch (pos.toLowerCase()) {
+  switch (mark.toLowerCase()) {
+    case '':
+      return '（空白）';
     case 'noun':
       return '名词';
     case 'verb':
@@ -27,6 +29,6 @@ export default (pos: string) => {
     case 'adv':
       return '副词';
     default:
-      return '';
+      return mark;
   }
 }

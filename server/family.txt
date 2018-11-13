@@ -1,4 +1,0 @@
-sleep = slept = slept
-tell = told = told
-say = said = said
-sit = sat = sit

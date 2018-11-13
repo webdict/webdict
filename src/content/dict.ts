@@ -11,8 +11,8 @@ Dict.innerHTML = [
   '    </div>',
   '  </div>',
   '  <form class="lanx-form lanx-none">',
-  '    <div class="lanx-back"></div>',
   '    <button type="submit" class="lanx-done">完成</button>',
+  '    <div class="lanx-back"></div>',
   '  </form>',
   '</div>',
   '<div class="lanx-foot"></div>'

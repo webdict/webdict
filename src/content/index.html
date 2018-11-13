@@ -7,6 +7,18 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>content</title>
   <link href="index.css" rel="stylesheet">
+  <style>
+    .lanx-mark-0, .lanx-mark-1{
+      display: none;
+    }
+    .lanx-edit-0:focus~.lanx-back .lanx-mark-0{
+      display: inline;
+    }
+    .lanx-edit-1:focus~.lanx-back .lanx-mark-1{
+      display: inline;
+    }
+
+  </style>
 </head>
 
 <body>
@@ -22,6 +34,13 @@
         <div class="lanx-pron lanx-pron-1">
           <div class="lanx-pron-puk">»</div>
           <div class="lanx-pron-pos"><span class="lanx-pron-play">pīn</span> <span class="lanx-pron-play">yīn</span></div>
+          <div class="lanx-pron-pus">«</div>
+        </div>
+        <div class="lanx-pron lanx-pron-2">
+          <div class="lanx-pron-puk">»</div>
+          <div class="lanx-pron-pos"><span class="lanx-pron-play"><span class="lanx-jyut-1">ng</span><span class="lanx-jyut-2">o</span><span
+                class="lanx-jyut-3">2</span></span> <span class="lanx-pron-play"><span class="lanx-jyut-1">l</span><span
+                class="lanx-jyut-2">in</span><span class="lanx-jyut-3">4</span></span></div>
           <div class="lanx-pron-pus">«</div>
         </div>
         <div class="lanx-head">
@@ -57,11 +76,9 @@
         </div>
       </div>
       <form class="lanx-form">
-        <div class="lanx-back">word</div>
         <textarea class="lanx-edit lanx-area">字，词</textarea>
-        <input class="lanx-edit lanx-line lanx-none" name="adv" value="字，词" placeholder="adv" />
-        <input class="lanx-edit lanx-line lanx-none" name="adj" value="字，词" placeholder="adj" />
         <button class="lanx-done">完成</button>
+        <div class="lanx-back">word</div>
       </form>
     </div>
     <div class="lanx-foot"></div>
@@ -77,11 +94,10 @@
         </div>
       </div>
       <form class="lanx-form">
-        <div class="lanx-back">word</div>
-        <textarea class="lanx-edit lanx-area lanx-none" name="">字，词</textarea>
-        <input class="lanx-edit lanx-line" name="adv" value="字，词" placeholder="adv" title="adv" />
-        <input class="lanx-edit lanx-line" name="adj" value="字，词" placeholder="adj" title="adv" />
+        <input class="lanx-edit lanx-line lanx-edit-0" name="adv" value="字，词" placeholder="adv" title="adv" />
+        <input class="lanx-edit lanx-line lanx-edit-1" name="adj" value="字，词" placeholder="adj" title="adv" />
         <button type="submit" class="lanx-done">完成</button>
+        <div class="lanx-back">word<span class="lanx-mark-0">@adv</span><span class="lanx-mark-1">@adj</span></div>
       </form>
     </div>
     <div class="lanx-foot"></div>

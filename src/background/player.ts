@@ -1,9 +1,11 @@
 import { host } from '../fetch';
 
-const ZH_URL = `${host}/static/pron/zh/`;
-const UK_URL = `${host}/static/pron/uk/`;
-const US_URL = `${host}/static/pron/us/`;
-
+const URLXD = {
+  zh: [`${host}/static/pron/zh/`, `.ogg`],
+  uk: [`${host}/static/pron/uk/`, `.mp3`],
+  us: [`${host}/static/pron/us/`, `.mp3`],
+  jp: [`${host}/static/pron/jp/`, `.mp3`]
+};
 
 const map: { [id: string]: HTMLAudioElement | undefined } = Object.create(null);
 /**
@@ -28,12 +30,9 @@ export default function play(code: string, onerror: (data: { code: string }) => 
     newAudio.preload = 'auto';
     newAudio.autoplay = true;
     const [lang, url] = code.split(':');
-    if (lang === 'zh') {
-      newAudio.src = ZH_URL + url + '.ogg';
-    } else if (lang === 'uk') {
-      newAudio.src = UK_URL + url + '.mp3';
-    } else if (lang === 'us') {
-      newAudio.src = US_URL + url + '.mp3';
+    if (URLXD[lang]) {
+      const [a, b] = URLXD[lang];
+      newAudio.src = a + url + b;
     }
     newAudio.onerror = (event: ErrorEvent) => {
       event.stopPropagation();

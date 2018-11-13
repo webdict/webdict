@@ -1,7 +1,6 @@
 import { Rect, Injector } from '../shared/typings';
-import inject from './popup';
 import { shorten, staticText } from './utility';
-
+import inject from './popup';
 
 export default function (injector: Injector) {
 

@@ -1,0 +1,6 @@
+**/.DS_Store
+*.db*
+_*
+secret.py
+record.txt
+coding.py

@@ -1,13 +1,6 @@
-.vscode
-!.vscode/settings.json
-
-**/package-lock.json
+**/.vscode
+!**/.vscode/settings.json
 **/node_modules
 **/__pycache__
 **/.DS_Store
-src/**/*.css
-src/**/*.js
-**/*.zip
-**/*.txt
-**/*.db
 **/dist

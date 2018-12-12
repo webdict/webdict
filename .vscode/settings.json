@@ -1,11 +1,14 @@
 {
   "files.exclude": {
-    "**/.vscode": true,
-    "**/design": true,
-    "**/LICENSE": true,
-    "**/node_modules": true,
     "**/package-lock.json": true,
-    "**/static": true
+    "**/tsconfig.json": true,
+    "**/node_modules": true,
+    "**/__pycache__": true,
+    "**/.vscode": true,
+    "**/LICENSE": true,
+    "README.md": true,
+    ".command": true,
+    ".babelrc": true,
   },
   "files.autoSave": "onFocusChange"
 }

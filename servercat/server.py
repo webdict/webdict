@@ -32,6 +32,17 @@ def add_headers(res):
     return res
 
 
+@app.route('/')
+def index():
+    from flask import url_for, redirect
+    return redirect(url_for('hello', name='world'))
+
+
+@app.route('/hello/<name>')
+def hello(name):
+    return 'Hello, %s!' % name
+
+
 # flag:
 #   0 - 未注册
 #   1 - 已登录
@@ -126,7 +137,7 @@ def signin():
 def signup():
     try:
         from re import match
-        from ranstr import random
+        from record import nextid
         data = request.get_json()
         name = data['username']
         if not match(r'^1([3578]\d|4[579]|66|9[89])\d{8}$', name):
@@ -135,7 +146,7 @@ def signup():
         hint = data['passhint']
         gender = data.get('gender', 1)
         birday = data.get('birday', 0)
-        uuid = session[UUID], random()
+        uuid = session[UUID], nextid()
         worker.signup(
             name,
             word,
@@ -244,4 +255,4 @@ def status(time):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='127.0.0.1', port=5000, debug=True)

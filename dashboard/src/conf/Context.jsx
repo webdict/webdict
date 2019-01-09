@@ -1,9 +1,7 @@
 import React from 'react';
 import Fetch from '../fetch';
 
-
 export const UserContext = React.createContext();
-
 
 export default class Context extends React.Component {
   constructor(props) {
@@ -12,7 +10,7 @@ export default class Context extends React.Component {
       onChange: this.setState.bind(this),
       username: null,
       userflag: -1
-    }
+    };
   }
 
   componentDidMount() {
@@ -22,10 +20,8 @@ export default class Context extends React.Component {
   }
 
   render() {
-    const { Provider } = UserContext;
-    const { children } = this.props;
-    return (
-      <Provider value={this.state}>{children}</Provider>
-    );
+    const {Provider} = UserContext;
+    const {children} = this.props;
+    return <Provider value={this.state}>{children}</Provider>;
   }
 }

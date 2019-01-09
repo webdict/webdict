@@ -1,13 +1,8 @@
 const path = require('path');
 
-module.exports = function ({
-  target,
-  entry,
-  htmls,
-  basedir
-}) {
+module.exports = function({target, entry, htmls, basedir}) {
   const resolve = {
-    extensions: [".js", ".jsx", ".ts", ".tsx"]
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   };
   const output = {
     path: path.join(basedir, target),

@@ -2,7 +2,7 @@ const content = require('./content');
 const chalk = require('chalk');
 const path = require('path');
 const fs = require('fs');
-module.exports = function (base, name, args) {
+module.exports = function(base, name, args) {
   if (!/^([A-Z][a-z0-9]*){2,}$/.test(name)) {
     console.log(chalk.red(`${name}: Incorrect name convention...`));
     process.exit();
@@ -15,10 +15,7 @@ module.exports = function (base, name, args) {
     fs.mkdirSync(path.join(base, name));
   }
   files.forEach(file => {
-    fs.createWriteStream(path.join(base, name, file)).write(
-      content(file, name, args)
-    );
+    fs.createWriteStream(path.join(base, name, file)).write(content(file, name, args));
     console.log(chalk.green('Created: ' + path.join(base, name, file)));
   });
-
-}
+};

@@ -2,7 +2,7 @@ const chalk = require('chalk');
 const path = require('path');
 const fs = require('fs');
 const hicode = require('../hicode');
-module.exports = function (base, name, args) {
+module.exports = function(base, name, args) {
   if (!/^([A-Z][a-z0-9]*)+$/.test(name)) {
     console.log(chalk.red('Incorrect name convention...'));
     process.exit();
@@ -53,7 +53,4 @@ module.exports = function (base, name, args) {
   );
 
   console.log(chalk.green('Created: ' + file));
-}
-
-
-
+};

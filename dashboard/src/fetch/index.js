@@ -1,4 +1,4 @@
-export { host } from './_';
+export {host} from './_';
 
 import history from './history';
 import hintme from './hintme';

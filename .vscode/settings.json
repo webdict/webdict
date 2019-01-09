@@ -10,5 +10,6 @@
     ".command": true,
     ".babelrc": true,
   },
-  "files.autoSave": "onFocusChange"
+  "files.autoSave": "onFocusChange",
+  "prettier.singleQuote": true
 }

@@ -1,4 +1,4 @@
-const { kebabCase } = require('lodash');
+const {kebabCase} = require('lodash');
 const hicode = require('../hicode');
 function indexJsx(view, args) {
   return [
@@ -40,7 +40,6 @@ function indexJsx(view, args) {
     `// }`,
     ``
   ].join('\n');
-
 }
 
 function indexSass(view, args) {
@@ -58,7 +57,7 @@ function indexSass(view, args) {
   ].join('\n');
 }
 
-module.exports = function (file, view, args) {
+module.exports = function(file, view, args) {
   switch (file) {
     case 'index.jsx':
       return indexJsx(view, args);
@@ -67,4 +66,4 @@ module.exports = function (file, view, args) {
     default:
       throw new Error(`Unknown file: ${file}...`);
   }
-}
+};

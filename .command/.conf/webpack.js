@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const chalk = require('chalk');
 const path = require('path');
 
-module.exports = function (config) {
+module.exports = function(config) {
   const compiler = webpack(config);
   compiler.apply(
     new ProgressPlugin((percentage, msg, current, active, modulepath) => {
@@ -20,39 +20,45 @@ module.exports = function (config) {
         console.log(chalk.yellow(`webpack: done @${new Date().toLocaleString()}`));
         process.stdout.write('\n');
       }
-    }));
-  const watching = compiler.watch({
-    ignored: /node_modules/,
-    aggregateTimeout: 0
-  }, (err, stats) => {
-    if (err) {
-      console.error(err.stack || err);
-      if (err.details) {
-        console.error(err.details);
+    })
+  );
+  const watching = compiler.watch(
+    {
+      ignored: /node_modules/,
+      aggregateTimeout: 0
+    },
+    (err, stats) => {
+      if (err) {
+        console.error(err.stack || err);
+        if (err.details) {
+          console.error(err.details);
+        }
+        return;
       }
-      return;
+
+      const info = stats.toJson();
+
+      if (stats.hasErrors()) {
+        console.error(info.errors);
+      }
+
+      // if (stats.hasWarnings()) {
+      //   console.warn(info.warnings);
+      // }
+
+      console.log(
+        stats.toString({
+          children: false,
+          warnings: false,
+          version: false,
+          maxModules: 4,
+          cached: false,
+          assets: false,
+          chunks: false,
+          colors: true
+        })
+      );
     }
-
-    const info = stats.toJson();
-
-    if (stats.hasErrors()) {
-      console.error(info.errors);
-    }
-
-    // if (stats.hasWarnings()) {
-    //   console.warn(info.warnings);
-    // }
-
-    console.log(stats.toString({
-      children: false,
-      warnings: false,
-      version: false,
-      maxModules: 4,
-      cached: false,
-      assets: false,
-      chunks: false,
-      colors: true,
-    }));
-  });
+  );
   return compiler;
 };

@@ -6,7 +6,6 @@ const base = process.env.INIT_CWD;
 
 const program = process.argv.slice(2);
 
-
 if (['component', 'components', 'view', 'views'].includes(path.basename(base))) {
   require('./view')(base, program[0], program.slice(1));
 } else if (path.basename(base) === 'page') {

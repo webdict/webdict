@@ -2,7 +2,6 @@ const chalk = require('chalk');
 const path = require('path');
 const fs = require('fs');
 
-
 function srcpath(basedir) {
   const srcdir = path.join(basedir, 'src');
   if (fs.existsSync(srcdir)) {
@@ -11,7 +10,7 @@ function srcpath(basedir) {
       srcdir
     };
   }
-  const { base, dir } = path.parse(basedir);
+  const {base, dir} = path.parse(basedir);
   if (!base) {
     console.log(chalk.red('src directory not found.'));
     process.exit();
@@ -19,12 +18,10 @@ function srcpath(basedir) {
   return srcpath(dir);
 }
 
-const {
-  srcdir, basedir
-} = srcpath(process.env.INIT_CWD);
+const {srcdir, basedir} = srcpath(process.env.INIT_CWD);
 
-
-const entries = fs.readdirSync(srcdir)
+const entries = fs
+  .readdirSync(srcdir)
   .map(file => path.join(srcdir, file))
   .filter(file => {
     if (fs.statSync(file).isDirectory()) {
@@ -38,9 +35,7 @@ const entry = {};
 const htmls = [];
 const includes = process.argv.slice(2);
 for (const entryfile of entries) {
-  const {
-    ext, name
-  } = path.parse(entryfile);
+  const {ext, name} = path.parse(entryfile);
   if (includes.length && !includes.includes(name)) {
     continue;
   }
@@ -48,7 +43,7 @@ for (const entryfile of entries) {
   if (fs.existsSync(html)) {
     console.log(chalk.green(`Page ${name}:`));
     console.log(chalk.green(`    ${html}`));
-    htmls.push({ name, html });
+    htmls.push({name, html});
     entry[name] = [
       path.join(srcdir, 'conf', `${name}.reset.scss`),
       path.join(srcdir, 'conf', `reset.scss`),
@@ -64,7 +59,6 @@ for (const entryfile of entries) {
         return false;
       }
     });
-
   } else {
     console.log(chalk.red(`Page ${name}:`));
     console.log(chalk.red(`    ${html}`));

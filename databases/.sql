@@ -59,11 +59,6 @@ CREATE TABLE user_tab(
 CREATE INDEX user_idx ON user_tab(useruuid);
 
 
-INSERT OR IGNORE INTO user_tab VALUES(
-  'root', 'root@930921', '@', '', strftime('%s','now'), 1, 0
-);
-
-
 CREATE TABLE hist_tab(
   uuid TEXT,
   word TEXT,

@@ -1,3 +1,4 @@
 **/*.json
 **/*.txt
+init.sql
 **/*.db

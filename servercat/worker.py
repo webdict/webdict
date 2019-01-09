@@ -193,8 +193,8 @@ def _mean_ok(word, mark, uuid, mean, link=None):
 
 
 def define(word, data, uuid):
-    with lock:
-        changed = False
+    with lock, database:
+        changed = 0
         for mark, mean in data.items():
             if "'" in mark:
                 continue
@@ -202,18 +202,15 @@ def define(word, data, uuid):
                 sql = "DELETE FROM mean_tab WHERE word = '%s' AND mark = '%s' AND uuid = '%s'"
                 args = _q(word), mark, uuid
                 cursor.execute(sql % args)
-                changed = True
+                changed += 1
                 continue
             if not _mean_ok(word, mark, uuid, mean):
                 continue
             sql = "INSERT INTO mean_tab VALUES('%s', '%s', '%s', '%s', strftime('%%s','now'))"
             args = _q(word), mark, uuid, _q(mean)
             cursor.execute(sql % args)
-            changed = True
-        if changed:
-            database.commit()
-            return '1'
-        return '0'
+            changed += 1
+        return changed
 
 
 ############################################################
@@ -257,13 +254,20 @@ def signup(name, word, hint, uuid, gender, birday):
     with lock, database:
         sql = (
             "INSERT OR IGNORE INTO user_tab "
-            "VALUES('%s', '%s', '%s', '%s', strftime('%%s','now')), %d, %d)"
+            "VALUES('%s', '%s', '%s', '%s', strftime('%%s','now')), 0, %d, %d)"
         )
         oldid, newid = uuid
         data = name, _q(word), _q(hint), newid, gender, birday
         cursor.execute(sql % data)
         _update(oldid, newid)
 
+
+############################################################
+
+def verify(username):
+    with lock, database:
+        sql = "UPDATE user_tab SET verified = 1 WHERE username = '%s'"
+        cursor.execute(sql % username)
 
 ############################################################
 

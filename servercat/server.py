@@ -1,11 +1,16 @@
 from datetime import timedelta
-from secret import UUID, FLAG
+
+from semail import semail
 from secret import appkey
+from secret import UUID
+from secret import FLAG
+
+from flask import render_template
 from flask import request
 from flask import session
 from flask import jsonify
 from flask import Flask
-import worker
+
 
 app = Flask(__name__)
 app.secret_key = appkey
@@ -13,34 +18,27 @@ app.permanent_session_lifetime = timedelta(days=365)
 
 
 @app.before_request
-def ensure_session():
-    if FLAG in session:
-        return
-    from uuid import uuid4
-    session.clear()
-    session[UUID] = uuid4().hex
-    session[FLAG] = 0
+def _before_request():
+    if FLAG not in session:
+        from rankey import rankey
+        session.clear()
+        session[UUID] = rankey()
+        session[FLAG] = 0
 
 
 @app.after_request
-def add_headers(res):
+def _after_request(res):
+    session.permanent = True
     origin = request.headers.get('origin', '*')
     res.headers['Access-Control-Allow-Origin'] = origin
     res.headers['Access-Control-Allow-Credentials'] = 'true'
     res.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-    session.permanent = True
     return res
 
 
 @app.route('/')
-def index():
-    from flask import url_for, redirect
-    return redirect(url_for('hello', name='world'))
-
-
-@app.route('/hello/<name>')
-def hello(name):
-    return 'Hello, %s!' % name
+def _index():
+    return 'hello, world!'
 
 
 # flag:
@@ -51,76 +49,85 @@ def hello(name):
 #   8 - 超级
 #  19 - 管理员(1+2+16)
 @app.route('/app/v1/contxt')
-def contxt():
+def _contxt():
     flag = session[FLAG]
     if flag == 0:
-        return '{"userflag": 0}'
+        return jsonify({
+            'userflag': 0
+        })
+    from worker import contxt
     if flag == 19:
-        data = worker.contxt('')
+        data = contxt('')
     else:
         uuid = session[UUID]
-        if flag == 1:
-            freq = worker.myfreq(uuid)
+        if flag != 1:
+            flag = session[FLAG] = (flag | 2)-2
+        else:
+            from worker import myfreq
+            freq = myfreq(uuid)
             if freq > 1000:
                 flag = session[FLAG] = 9
             elif freq > 100:
                 flag = session[FLAG] = 5
-        else:
-            flag = session[FLAG] = (flag | 2)-2
-        data = worker.contxt(uuid)
+        data = contxt(uuid)
     data['userflag'] = flag
     return jsonify(data)
 
 
 # 模糊搜索
 @app.route('/app/v1/search/en/<text>')
-def search_en(text):
+def _search_en(text):
     if len(text) > 32 or "'" in text:
-        return '[]'
+        return jsonify([])
+    from worker import search_en
     uuid = session[UUID]
-    return jsonify(worker.search_en(text, uuid))
+    return jsonify(search_en(text, uuid))
 
 
 # 模糊搜索
 @app.route('/app/v1/search/zh/<text>')
-def search_zh(text):
+def _search_zh(text):
     if len(text) > 32 or "'" in text:
-        return '[]'
+        return jsonify([])
+    from worker import search_zh
     uuid = session[UUID]
-    return jsonify(worker.search_zh(text, uuid))
+    return jsonify(search_zh(text, uuid))
 
 
 # 编辑释义
 @app.route('/app/v1/define/<word>', methods=['POST'])
-def define(word):
+def _define(word):
     flag = session[FLAG]
     if flag == 0:
         return jsonify(-2)
     try:
+        from worker import define
         data = request.get_json()
         if flag == 19:
-            return worker.define(word, data, '')
+            return jsonify(define(word, data, ''))
+        if flag & 2 and not define(word, data, ''):
+            return jsonify(0)
         uuid = session[UUID]
-        if flag & 2:
-            worker.define(word, data, '')
-        return worker.define(word, data, uuid)
+        return jsonify(define(word, data, uuid))
     except:
         return jsonify(-1)
 
 
 @app.route('/app/v1/hintme/<username>')
-def hintme(username):
-    return jsonify(worker.hintme(username))
+def _hintme(username):
+    from worker import hintme
+    return jsonify(hintme(username))
 
 
 @app.route('/app/v1/signin', methods=['POST'])
-def signin():
+def _signin():
+    from worker import signin
     try:
         data = request.get_json()
         name = data['username']
         word = data['password']
         uuid = session[UUID]
-        uuid = worker.signin(name, word, uuid)
+        uuid = signin(name, word, uuid)
         if uuid is None:
             return jsonify(0)
         if uuid:
@@ -134,73 +141,101 @@ def signin():
 
 
 @app.route('/app/v1/signup', methods=['POST'])
-def signup():
+def _signup():
+    from record import nextid
+    from worker import signup
+    from signer import dumps
+    from re import match
     try:
-        from re import match
-        from record import nextid
         data = request.get_json()
-        name = data['username']
-        if not match(r'^1([3578]\d|4[579]|66|9[89])\d{8}$', name):
+        username = data['username'].lower()
+        # if not match(r'^1([3578]\d|4[579]|66|9[89])\d{8}$', username):
+        if not match(r'^[-._a-z0-9]+@(?:[-a-z0-9]+\.)+[a-z]+$', username):
             return jsonify(-2)
-        word = data['password']
-        hint = data['passhint']
+        password = data['password']
+        passhint = data['passhint']
         gender = data.get('gender', 1)
         birday = data.get('birday', 0)
         uuid = session[UUID], nextid()
-        worker.signup(
-            name,
-            word,
-            hint,
+        signup(
+            username,
+            password,
+            passhint,
             uuid,
             gender,
             birday
         )
         session[FLAG] = 1
-        return jsonify(1)
+        code = dumps(username)
+        return jsonify(semail(
+            f'http://dict.ngolin.com/verify/{code}',
+            username
+        ))
     except:
         return jsonify(-1)
 
 
+@app.route('/verify/<code>')
+def _verify(code):
+    from worker import verify
+    from signer import loads
+    from signer import dumps
+    try:
+        username, timestamp = loads(code)
+        if not timestamp:
+            verify(username)
+            return render_template('verify_sucess.html', username=username)
+        code = dumps(username)
+        try:
+            if semail(f'http://dict.ngolin.com/verify/{code}', username):
+                return render_template('verify_retry.html', username=username)
+            raise Exception()
+        except:
+            return render_template('verify_later.html', username=username)
+    except:
+        return 404
+
+
 @app.route('/app/v1/addnote', methods=['POST'])
-def addnote():
+def _addnote():
+    from worker import addnote
     try:
         data = request.get_json()
         note = data['note'].strip()
         if note:
             furl = data['furl']
             uuid = session[UUID]
-            worker.addnote(uuid, note, furl)
+            addnote(uuid, note, furl)
         return jsonify(1)
     except:
         return jsonify(-1)
 
 
 @app.route('/app/v1/getnote/<int:page>/<int:size>/<order>')
-def getnote(page, size, order):
+def _getnote(page, size, order):
     offset = (page-1)*size
     if offset >= 1000:
         return jsonify(total=0, data=[])
     if any(x not in ('furl', 'time', 'note') for x in order.split('-')):
         return jsonify(total=0, data=[])
+    from worker import getnote
     order = order.replace('-', ', ')
     note = request.args.get('note')
     furl = request.args.get('furl')
     uuid = session[UUID]
     limit = size
-    return jsonify(
-        worker.getnote(
-            uuid,
-            note,
-            furl,
-            order,
-            limit,
-            offset
-        )
-    )
+    return jsonify(getnote(
+        uuid,
+        note,
+        furl,
+        order,
+        limit,
+        offset
+    ))
 
 
 @app.route('/app/v1/history/<int:page>/<int:size>/<int:flag>/<int:other>/<operator>/<order>')
-def history(page, size, flag, other, operator, order):
+def _history(page, size, flag, other, operator, order):
     word = request.args.get('word')
     offset = (page-1)*size
     if offset >= (100 if word else 1000):
@@ -209,49 +244,52 @@ def history(page, size, flag, other, operator, order):
         return jsonify(total=0, data=[])
     if any(x not in ('word', 'time_DESC', 'freq_DESC') for x in order.split('-')):
         return jsonify(total=0, data=[])
+    from worker import history
     order = order.replace('-', ', ').replace('_', ' ')
     uuid = session[UUID]
     limit = size
-    return jsonify(
-        worker.history(
-            uuid,
-            word,
-            flag,
-            operator,
-            other,
-            order,
-            limit,
-            offset
-        )
-    )
+    return jsonify(history(
+        uuid,
+        word,
+        flag,
+        operator,
+        other,
+        order,
+        limit,
+        offset
+    ))
 
 
 @app.route('/app/v1/reflag/<word>/<int:flag>')
-def reflag(word, flag):
+def _reflag(word, flag):
+    from worker import reflag
     uuid = session[UUID]
-    return jsonify(worker.reflag(uuid, word, flag))
+    return jsonify(reflag(uuid, word, flag))
 
 
 @app.route('/app/v1/reinfo/<word>/<info>')
-def reinfo(word, info):
+def _reinfo(word, info):
+    from worker import reinfo
     uuid = session[UUID]
-    return jsonify(worker.reinfo(uuid, word, info))
+    return jsonify(reinfo(uuid, word, info))
 
 
 @app.route('/app/v1/deflag/<word>')
-def deflag(word):
+def _deflag(word):
+    from worker import deflag
     uuid = session[UUID]
-    return jsonify(worker.deflag(uuid, word))
+    return jsonify(deflag(uuid, word))
 
 
 @app.route('/app/v1/status/<int:time>')
-def status(time):
+def _status(time):
     if time < 1543622400:  # 2018-12-01 00:00+08
         return jsonify({})
     flag = session[FLAG]
     if flag < 0:  # permission denied
         return jsonify({})
-    return jsonify(worker.status(time))
+    from worker import status
+    return jsonify(status(time))
 
 
 if __name__ == '__main__':

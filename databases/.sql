@@ -50,6 +50,7 @@ CREATE TABLE user_tab(
   passhint TEXT,
   useruuid TEXT,
   jointime INTEGER,
+  verified INTEGER,
   gender INTEGER,
   birday INTEGER,
   UNIQUE (username) ON CONFLICT IGNORE

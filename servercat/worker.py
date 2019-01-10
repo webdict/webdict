@@ -2,7 +2,7 @@ from functools import lru_cache
 from sqlite3 import connect
 from threading import RLock
 from forkme import forkme
-
+from record import nextid
 
 ############################################################
 
@@ -216,58 +216,59 @@ def define(word, data, uuid):
 ############################################################
 
 
-def hintme(username):
+def check(username):
     with lock:
-        sql = "SELECT passhint FROM user_tab WHERE username = '%s'"
+        sql = "SELECT password FROM user_tab WHERE username = '%s'"
         cursor.execute(sql % username)
         one = cursor.fetchone()
         return one and one[0]
 
 
-def _update(oldid, newid):
-    sql = "UPDATE hist_tab SET uuid = '%s' WHERE uuid = '%s'"
-    cursor.execute(sql % (newid, oldid))
-    sql = "UPDATE note_tab SET uuid = '%s' WHERE uuid = '%s'"
-    cursor.execute(sql % (newid, oldid))
+############################################################
+
+def passwd(username, password):
+    '''
+    set password of username
+    '''
+    with lock, database:
+        sql = "UPDATE user_tab SET password = '%s' WHERE username = '%s'"
+        cursor.execute(sql % (username, password))
 
 ############################################################
 
 
 def signin(username, password, oldid):
-    with lock:
+    with lock, database:
         sql = "SELECT useruuid FROM user_tab WHERE username = '%s' AND password = '%s'"
-        cursor.execute(sql % (username, _q(password)))
+        cursor.execute(sql % (username, password))
         one = cursor.fetchone()
         if not one:
             return None
-        newid = one[0]
-        if newid:
-            with database:
-                _update(oldid, newid)
+        newid = one[0] or nextid()
+        sql = (
+            "UPDATE user_tab SET useruuid = '%s', "
+            "lasttime = strftime('%%s','now') "
+            "WHERE username = '%s'"
+        )
+        cursor.execute(sql % (newid, username))
+        sql = "UPDATE hist_tab SET uuid = '%s' WHERE uuid = '%s'"
+        cursor.execute(sql % (newid, oldid))
+        sql = "UPDATE note_tab SET uuid = '%s' WHERE uuid = '%s'"
+        cursor.execute(sql % (newid, oldid))
         return newid
 
 
 ############################################################
 
 
-def signup(name, word, hint, uuid, gender, birday):
+def signup(name, word):
     with lock, database:
         sql = (
             "INSERT OR IGNORE INTO user_tab "
-            "VALUES('%s', '%s', '%s', '%s', strftime('%%s','now')), 0, %d, %d)"
+            "VALUES('%s', '%s', '', strftime('%%s','now'), 0)"
         )
-        oldid, newid = uuid
-        data = name, _q(word), _q(hint), newid, gender, birday
-        cursor.execute(sql % data)
-        _update(oldid, newid)
+        cursor.execute(sql % (name, word))
 
-
-############################################################
-
-def verify(username):
-    with lock, database:
-        sql = "UPDATE user_tab SET verified = 1 WHERE username = '%s'"
-        cursor.execute(sql % username)
 
 ############################################################
 
@@ -315,7 +316,7 @@ def myfreq(uuid):
 
 def contxt(uuid):
     with lock:
-        keys = ['username', 'userhint', 'jointime', 'gender', 'birday']
+        keys = ['username', 'jointime', 'lasttime']
         sql = "SELECT %s FROM user_tab WHERE useruuid = '%s'"
         cursor.execute(sql % (', '.join(keys), uuid))
         return {k: v for k, v in zip(keys, cursor.fetchone())}

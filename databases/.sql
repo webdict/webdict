@@ -47,12 +47,9 @@ CREATE INDEX mean_idx ON mean_tab(uuid) WHERE length(uuid);
 CREATE TABLE user_tab(
   username TEXT,
   password TEXT,
-  passhint TEXT,
   useruuid TEXT,
   jointime INTEGER,
-  verified INTEGER,
-  gender INTEGER,
-  birday INTEGER,
+  lasttime INTEGER,
   UNIQUE (username) ON CONFLICT IGNORE
 );
 

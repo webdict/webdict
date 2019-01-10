@@ -1,9 +1,9 @@
 from datetime import timedelta
 
-from semail import semail
 from secret import appkey
 from secret import UUID
 from secret import FLAG
+from secret import PSWD
 
 from flask import render_template
 from flask import request
@@ -47,7 +47,6 @@ def _index():
 #   2 - 开关
 #   4 - 高级
 #   8 - 超级
-#  19 - 管理员(1+2+16)
 @app.route('/app/v1/contxt')
 def _contxt():
     flag = session[FLAG]
@@ -56,20 +55,17 @@ def _contxt():
             'userflag': 0
         })
     from worker import contxt
-    if flag == 19:
-        data = contxt('')
+    uuid = session[UUID]
+    if flag != 1:
+        flag = session[FLAG] = (flag | 2)-2
     else:
-        uuid = session[UUID]
-        if flag != 1:
-            flag = session[FLAG] = (flag | 2)-2
-        else:
-            from worker import myfreq
-            freq = myfreq(uuid)
-            if freq > 1000:
-                flag = session[FLAG] = 9
-            elif freq > 100:
-                flag = session[FLAG] = 5
-        data = contxt(uuid)
+        from worker import myfreq
+        freq = myfreq(uuid)
+        if freq > 1000:
+            flag = session[FLAG] = 9
+        elif freq > 100:
+            flag = session[FLAG] = 5
+    data = contxt(uuid)
     data['userflag'] = flag
     return jsonify(data)
 
@@ -103,8 +99,6 @@ def _define(word):
     try:
         from worker import define
         data = request.get_json()
-        if flag == 19:
-            return jsonify(define(word, data, ''))
         if flag & 2 and not define(word, data, ''):
             return jsonify(0)
         uuid = session[UUID]
@@ -113,87 +107,98 @@ def _define(word):
         return jsonify(-1)
 
 
-@app.route('/app/v1/hintme/<username>')
-def _hintme(username):
-    from worker import hintme
-    return jsonify(hintme(username))
-
-
-@app.route('/app/v1/signin', methods=['POST'])
-def _signin():
-    from worker import signin
+@app.route('/app/v1/check')
+def _check():
+    from rankey import rankey
+    from worker import signup
+    from sender import sendin
+    from worker import check
+    from matchr import email
     try:
         data = request.get_json()
-        name = data['username']
+        username = data['username'].lower()
+        if not email(username):
+            return jsonify(-2)
+        password = check(username)
+        if password:
+            session[PSWD] = password
+            return jsonify(1)
+        password = rankey(9)
+        if sendin(password, username):
+            signup(username, password)
+            return jsonify(2)
+        return jsonify(0)
+    except:
+        return jsonify(-1)
+
+
+@app.route('/app/v1/check/in', methods=['POST'])
+def _check_in():
+    from worker import signin
+    from matchr import email
+    from matchr import passd
+    try:
+        data = request.get_json()
+        name = data['username'].lower()
+        if not email(name):
+            return jsonify(-2)
         word = data['password']
-        uuid = session[UUID]
-        uuid = signin(name, word, uuid)
-        if uuid is None:
+        if not passd(word):
+            return jsonify(-2)
+        uuid = signin(name, word, session[UUID])
+        if not uuid:
             return jsonify(0)
-        if uuid:
-            session[UUID] = uuid
-            session[FLAG] = 1
-        else:
-            session[FLAG] = 19
+        session[UUID] = uuid
+        session[FLAG] = 1
+        session.pop(PSWD, None)
         return jsonify(1)
     except:
         return jsonify(-1)
 
 
-@app.route('/app/v1/signup', methods=['POST'])
-def _signup():
-    from record import nextid
-    from worker import signup
-    from signer import dumps
-    from re import match
+@app.route('/app/v1/check/at', methods=['POST'])
+def _check_at():
+    from sender import sendat
+    from worker import passwd
+    from matchr import email
     try:
         data = request.get_json()
         username = data['username'].lower()
-        # if not match(r'^1([3578]\d|4[579]|66|9[89])\d{8}$', username):
-        if not match(r'^[-._a-z0-9]+@(?:[-a-z0-9]+\.)+[a-z]+$', username):
+        if not email(username):
             return jsonify(-2)
-        password = data['password']
-        passhint = data['passhint']
-        gender = data.get('gender', 1)
-        birday = data.get('birday', 0)
-        uuid = session[UUID], nextid()
-        signup(
-            username,
-            password,
-            passhint,
-            uuid,
-            gender,
-            birday
-        )
-        session[FLAG] = 1
-        code = dumps(username)
-        return jsonify(semail(
-            f'http://dict.ngolin.com/verify/{code}',
-            username
-        ))
+        password = session[PSWD]
+        if sendat(password, username):
+            passwd(username, password)
+        return jsonify(1)
     except:
         return jsonify(-1)
 
 
-@app.route('/verify/<code>')
-def _verify(code):
-    from worker import verify
+@app.route('/reset/password/<code>')
+def _reset_password(code):
+    from worker import passwd
+    from rankey import rankey
+    from sender import sendre
     from signer import loads
-    from signer import dumps
     try:
         username, timestamp = loads(code)
         if not timestamp:
-            verify(username)
-            return render_template('verify_sucess.html', username=username)
-        code = dumps(username)
-        try:
-            if semail(f'http://dict.ngolin.com/verify/{code}', username):
-                return render_template('verify_retry.html', username=username)
-            raise Exception()
-        except:
-            return render_template('verify_later.html', username=username)
+            password = rankey(9)
+            if sendre(password, username):
+                passwd(username, password)
+            return render_template(
+                'reset_sucess.html',
+                username=username
+            )
+        return render_template(
+            'reset_outage.html',
+            username=username
+        )
     except:
-        return 404
+        return render_template(
+            'reset_failed.html',
+            username=username
+        )
 
 
 @app.route('/app/v1/addnote', methods=['POST'])

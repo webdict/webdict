@@ -1,5 +1,18 @@
 import React, {useState, useEffect} from 'react';
-import {Table, Divider, Tag, Icon, Form, Row, Col, Select, Dropdown, Menu, Input, DatePicker} from 'antd';
+import {
+  Table,
+  Divider,
+  Tag,
+  Icon,
+  Form,
+  Row,
+  Col,
+  Select,
+  Dropdown,
+  Menu,
+  Input,
+  DatePicker
+} from 'antd';
 import {zhlist, enlist, tagsOf} from '../data/wordlist';
 import WordInfo from '../view/WordInfo';
 import Fetch from '../fetch';
@@ -11,7 +24,15 @@ export default function Hist({
     params: {page}
   }
 }) {
-  const {setFormState, operator, orders, value, list, flag, lang} = useFormState();
+  const {
+    setFormState,
+    operator,
+    orders,
+    value,
+    list,
+    flag,
+    lang
+  } = useFormState();
   const [loading, pagination, data, onAction] = useTableState({
     page: page.slice(1),
     flag: (flag | 1) - 1 + lang,
@@ -40,10 +61,18 @@ export default function Hist({
       <Form style={{marginBottom: '8px'}}>
         <Row gutter={12}>
           <Col span={6}>
-            <Input value={value} placeholder="搜索内容_%" onChange={onValueChange} />
+            <Input
+              value={value}
+              placeholder="搜索内容_%"
+              onChange={onValueChange}
+            />
           </Col>
           <Col span={5}>
-            <Input value={value} placeholder="搜索来源_%" onChange={onValueChange} />
+            <Input
+              value={value}
+              placeholder="搜索来源_%"
+              onChange={onValueChange}
+            />
           </Col>
           <Col span={8}>
             <RangePicker onChange={onDateChange} style={{width: '100%'}} />
@@ -52,7 +81,9 @@ export default function Hist({
             <Select
               value={undefined}
               onChange={onOrdersChange}
-              placeholder={`排序：${orders.map(({title}) => title).join(' > ')}`}>
+              placeholder={`排序：${orders
+                .map(({title}) => title)
+                .join(' > ')}`}>
               {orders.map(({value, title}) => (
                 <Option value={value} key={value}>
                   {title}
@@ -112,7 +143,7 @@ function useFormState() {
   const [operator, setOperator] = useState('or');
   const [value, setValue] = useState('');
   const [flag, setFlag] = useState(flagOf(lang, operator));
-  const [_orders, setOrders] = useState(['furl', 'time', 'word']);
+  const [_orders, setOrders] = useState(['furl', 'time', 'freq_DESC']);
   function setFormState(key, val) {
     switch (key) {
       case 'lang':
@@ -200,13 +231,29 @@ function useTableState({page, flag, order, operator, other, word}) {
     if (_flag < 0) {
       Fetch.deflag(rowid).then(({info, flag: _flag}) => {
         setData(
-          data.map(e => (e.rowid === rowid ? {...e, info, flag: _flag, tags: tagsOf(_flag & flag), loading: 0} : e))
+          data.map(e =>
+            e.rowid === rowid
+              ? {
+                  ...e,
+                  info,
+                  flag: _flag,
+                  tags: tagsOf(_flag & flag),
+                  loading: 0
+                }
+              : e
+          )
         );
       });
     } else {
       Fetch.reflag(rowid, _flag).then(okay => {
         if (okay) {
-          setData(data.map(e => (e.rowid === rowid ? {...e, flag: _flag, tags: tagsOf(_flag & flag), loading: 0} : e)));
+          setData(
+            data.map(e =>
+              e.rowid === rowid
+                ? {...e, flag: _flag, tags: tagsOf(_flag & flag), loading: 0}
+                : e
+            )
+          );
         }
       });
     }
@@ -220,7 +267,14 @@ function columns(onAction, list) {
       title: '词条',
       dataIndex: 'word',
       render(word, {info}) {
-        return <WordInfo word={word} info={info} key={info} onSubmit={info => Fetch.reinfo(word, info)} />;
+        return (
+          <WordInfo
+            word={word}
+            info={info}
+            key={info}
+            onSubmit={info => Fetch.reinfo(word, info)}
+          />
+        );
       }
     },
     {
@@ -312,7 +366,11 @@ function columns(onAction, list) {
         const remove = flag & 4;
         const onChange = mask => {
           if (loading) return;
-          onAction(rowid, mask !== 6 ? (flag | 6) - 6 + mask - (flag & mask) : -1, mask);
+          onAction(
+            rowid,
+            mask !== 6 ? (flag | 6) - 6 + mask - (flag & mask) : -1,
+            mask
+          );
         };
         return (
           <a>
@@ -338,7 +396,11 @@ function columns(onAction, list) {
               />
             )}
             <Divider type="vertical" />
-            {loading === 6 ? <Icon type="loading" /> : <Icon type="undo" onClick={() => onChange(6)} />}
+            {loading === 6 ? (
+              <Icon type="loading" />
+            ) : (
+              <Icon type="undo" onClick={() => onChange(6)} />
+            )}
           </a>
         );
       }

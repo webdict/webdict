@@ -216,7 +216,7 @@ def define(word, data, uuid):
 ############################################################
 
 
-def check(username):
+def password_of(username):
     with lock:
         sql = "SELECT password FROM user_tab WHERE username = '%s'"
         cursor.execute(sql % username)
@@ -261,13 +261,13 @@ def signin(username, password, oldid):
 ############################################################
 
 
-def signup(name, word):
+def signup(username, password):
     with lock, database:
         sql = (
             "INSERT OR IGNORE INTO user_tab "
             "VALUES('%s', '%s', '', strftime('%%s','now'), 0)"
         )
-        cursor.execute(sql % (name, word))
+        cursor.execute(sql % (username, password))
 
 
 ############################################################
@@ -308,18 +308,18 @@ def myfreq(uuid):
         sql = "SELECT max(freq) FROM hist_tab WHERE uuid = '%s'"
         cursor.execute(sql)
         one = cursor.fetchone()
-        return one[0] if one else 0
+        return one and one[0] or 0
 
 
 ############################################################
 
 
-def contxt(uuid):
+def username_of(uuid):
     with lock:
-        keys = ['username', 'jointime', 'lasttime']
-        sql = "SELECT %s FROM user_tab WHERE useruuid = '%s'"
-        cursor.execute(sql % (', '.join(keys), uuid))
-        return {k: v for k, v in zip(keys, cursor.fetchone())}
+        sql = "SELECT username FROM user_tab WHERE useruuid = '%s'"
+        cursor.execute(sql % uuid)
+        one = cursor.fetchone()
+        return one and one[0]
 
 
 ############################################################

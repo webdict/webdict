@@ -1,7 +1,8 @@
+**/__pycache__
 **/.DS_Store
 *.db*
 _*
 
+.record.by
 coding.py
 secret.py
-record.by

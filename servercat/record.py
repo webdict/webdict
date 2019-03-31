@@ -1,7 +1,7 @@
 from threading import Lock
 from secret import appstr
 try:
-    with open('record.by', mode='rb') as f:
+    with open('.record.by', mode='rb') as f:
         record = list(f.read())
 except:
     from random import randrange
@@ -20,6 +20,6 @@ def nextid():
     with lock:
         if increment():
             print('record index may overflow')
-        with open('record.by', mode='wb') as f:
+        with open('.record.by', mode='wb') as f:
             f.write(bytes(record))
         return ''.join(appstr[i] for i in record)

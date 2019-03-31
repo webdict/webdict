@@ -3,27 +3,29 @@ from datetime import timedelta
 from secret import appkey
 from secret import UUID
 from secret import FLAG
-from secret import PSWD
 
-from flask import render_template
+from flask import render_template as render
 from flask import request
 from flask import session
 from flask import jsonify
 from flask import Flask
-
 
 app = Flask(__name__)
 app.secret_key = appkey
 app.permanent_session_lifetime = timedelta(days=365)
 
 
+def reset_session():
+    from rankey import rankey
+    session.clear()
+    session[UUID] = rankey()
+    session[FLAG] = 0
+
+
 @app.before_request
 def _before_request():
     if FLAG not in session:
-        from rankey import rankey
-        session.clear()
-        session[UUID] = rankey()
-        session[FLAG] = 0
+        reset_session()
 
 
 @app.after_request
@@ -36,38 +38,24 @@ def _after_request(res):
     return res
 
 
-@app.route('/')
-def _index():
-    return 'hello, world!'
-
-
 # flag:
 #   0 - 未注册
 #   1 - 已登录
-#   2 - 开关
-#   4 - 高级
-#   8 - 超级
 @app.route('/app/v1/contxt')
 def _contxt():
     flag = session[FLAG]
     if flag == 0:
         return jsonify({
-            'userflag': 0
+            'userflag': 0,
+            'username': ''
         })
-    from worker import contxt
+    from worker import username_of
     uuid = session[UUID]
-    if flag != 1:
-        flag = session[FLAG] = (flag | 2)-2
-    else:
-        from worker import myfreq
-        freq = myfreq(uuid)
-        if freq > 1000:
-            flag = session[FLAG] = 9
-        elif freq > 100:
-            flag = session[FLAG] = 5
-    data = contxt(uuid)
-    data['userflag'] = flag
-    return jsonify(data)
+    username = username_of(uuid)
+    return jsonify({
+        'userflag': 1,
+        'username': username
+    })
 
 
 # 模糊搜索
@@ -93,47 +81,83 @@ def _search_zh(text):
 # 编辑释义
 @app.route('/app/v1/define/<word>', methods=['POST'])
 def _define(word):
-    flag = session[FLAG]
-    if flag == 0:
-        return jsonify(-2)
     try:
         from worker import define
         data = request.get_json()
-        if flag & 2 and not define(word, data, ''):
-            return jsonify(0)
+        flag = session[FLAG]
+        if flag == 0:
+            return jsonify(define(word, data, ''))
         uuid = session[UUID]
         return jsonify(define(word, data, uuid))
     except:
         return jsonify(-1)
 
 
-@app.route('/app/v1/check')
+# 编辑释义
+@app.route('/app/v1/define/own/<word>', methods=['POST'])
+def _defown(word):
+    if session[FLAG] == 0:
+        return jsonify(-2)
+    try:
+        from worker import define
+        data = request.get_json()
+        uuid = session[UUID]
+        return jsonify(define(word, data, uuid))
+    except:
+        return jsonify(-1)
+
+
+# 编辑释义
+@app.route('/app/v1/define/all/<word>', methods=['POST'])
+def _defall(word):
+    try:
+        from worker import define
+        data = request.get_json()
+        return jsonify(define(word, data, ''))
+    except:
+        return jsonify(-1)
+
+
+@app.route('/app/v1/check', methods=['POST'])
 def _check():
+    '''
+    -2: 邮箱格式不对
+    -1: 网络错误重试
+     0: 邮箱地址不对
+     1: 已注册
+     2: 未注册
+    '''
     from rankey import rankey
     from worker import signup
     from sender import sendin
-    from worker import check
+    from sender import sendat
+    from worker import password_of
     from matchr import email
     try:
         data = request.get_json()
         username = data['username'].lower()
         if not email(username):
-            return jsonify(-2)
-        password = check(username)
+            return jsonify(-1)
+        password = password_of(username)
         if password:
-            session[PSWD] = password
+            sendat(password, username)
             return jsonify(1)
         password = rankey(9)
-        if sendin(password, username):
-            signup(username, password)
-            return jsonify(2)
+        sendin(password, username)
+        signup(username, password)
         return jsonify(0)
     except:
-        return jsonify(-1)
+        return jsonify(-2)
 
 
 @app.route('/app/v1/check/in', methods=['POST'])
 def _check_in():
+    '''
+    -2: 用户名或密码格式错误
+     0: 用户名或密码错误
+    -1: 提交数据错误
+     1: 登录成功
+    '''
     from worker import signin
     from matchr import email
     from matchr import passd
@@ -150,30 +174,18 @@ def _check_in():
             return jsonify(0)
         session[UUID] = uuid
         session[FLAG] = 1
-        session.pop(PSWD, None)
         return jsonify(1)
     except:
         return jsonify(-1)
 
 
-@app.route('/app/v1/check/at', methods=['POST'])
-def _check_at():
-    from sender import sendat
-    from worker import passwd
-    from matchr import email
-    try:
-        data = request.get_json()
-        username = data['username'].lower()
-        if not email(username):
-            return jsonify(-2)
-        password = session[PSWD]
-        if sendat(password, username):
-            passwd(username, password)
-        return jsonify(1)
-    except:
-        return jsonify(-1)
+@app.route('/app/v1/logout')
+def _logout():
+    reset_session()
+    return jsonify(1)
 
 
+# 未完全实现
 @app.route('/reset/password/<code>')
 def _reset_password(code):
     from worker import passwd
@@ -181,23 +193,24 @@ def _reset_password(code):
     from sender import sendre
     from signer import loads
     try:
-        username, timestamp = loads(code)
-        if not timestamp:
+        username, expired = loads(code)
+        if not expired:
             password = rankey(9)
-            if sendre(password, username):
-                passwd(username, password)
-            return render_template(
-                'reset_sucess.html',
-                username=username
+            passwd(username, password)
+            sendre(password, username)
+            reset_session()
+            return render(
+                'reset_password.html',
+                title='重设密码成功'
             )
-        return render_template(
-            'reset_outage.html',
-            username=username
+        return render(
+            'reset_password.html',
+            title='重设密码过期'
         )
     except:
-        return render_template(
-            'reset_failed.html',
-            username=username
+        return render(
+            'reset_password.html',
+            title='重设密码失败'
         )
 
 

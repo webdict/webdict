@@ -1,6 +1,7 @@
-**/.vscode
-!**/.vscode/settings.json
+/.vscode/*
+!/.vscode/settings.json
 **/node_modules
 **/__pycache__
 **/.DS_Store
 **/dist
+**/*.zip

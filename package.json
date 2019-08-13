@@ -1,12 +1,12 @@
 {
   "name": "webdict",
   "version": "1.1.0",
-  "description": "webdict - Play with the Web!",
   "author": "李鸿章<paindo@163.com>",
   "license": "MIT",
   "scripts": {
     "sass": "node-sass $INIT_CWD -o $INIT_CWD; node-sass --watch $INIT_CWD -o $INIT_CWD",
     "pack": "webpack --config extension/webpack.config.js --watch",
+    "locale": "python3 extension/_locales.py",
     "lint": "prettier --write \"**/*.{js,jsx,ts,tsx,html,css,scss}\""
   },
   "husky": {

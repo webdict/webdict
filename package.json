@@ -6,8 +6,7 @@
   "scripts": {
     "sass": "node-sass $INIT_CWD -o $INIT_CWD; node-sass --watch $INIT_CWD -o $INIT_CWD",
     "pack": "webpack --config extension/webpack.config.js --watch",
-    "locale": "python3 extension/_locales.py",
-    "lint": "prettier --write \"**/*.{js,jsx,ts,tsx,html,css,scss}\""
+    "locale": "python3 extension/_locales.py"
   },
   "husky": {
     "hooks": {
@@ -47,7 +46,7 @@
     "typescript": "^3.0.3",
     "webpack": "^4.19.0",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "3.1.10"
+    "webpack-dev-server": "^3.8.2"
   },
   "dependencies": {
     "hife": "^1.1.1",

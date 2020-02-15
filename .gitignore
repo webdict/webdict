@@ -1,7 +1,7 @@
 /.vscode/*
 !/.vscode/settings.json
+/extension/webdict
 **/node_modules
 **/__pycache__
 **/.DS_Store
-**/dist
 **/*.zip

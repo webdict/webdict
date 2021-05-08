@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "hife": "^1.1.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "preact": "^8.4.2"
   }
 }

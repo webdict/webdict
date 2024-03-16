@@ -5,8 +5,7 @@ import notify from './notifics';
 import { host } from '../fetch';
 import Fetch from '../fetch';
 import play from './player';
-import './lifehooks';
-import './contextmenus';
+
 type Message = { action: PageScriptAction; data: any };
 chrome.runtime.onMessage.addListener(
   ({ action, data }: Message, sender, sendRes) => {
@@ -15,9 +14,6 @@ chrome.runtime.onMessage.addListener(
       return false;
     }
     switch (action) {
-      case PageScriptAction.ADD_NOTE:
-        Fetch.addnote(data);
-        return false;
       case PageScriptAction.PLAY_SOUND:
         play(data, data => {
           chrome.tabs.sendMessage(sender.tab!.id!, {

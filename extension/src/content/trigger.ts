@@ -66,7 +66,6 @@ export default function(fetcher: Fetcher) {
 
   return {
     onPlayError,
-    onHighlight: hideDict,
     toggleDictEnabled() {
       return (dictEnabled = !dictEnabled);
     },

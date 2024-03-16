@@ -25,7 +25,6 @@ export interface WordData {
 }
 
 export namespace PageScriptData {
-  export type AddNote = { note: string; furl: string };
   export type Search = { text: string; lang: 'zh' | 'en' };
   export type Define = { word: string; data: any; type: 'all' | 'own' };
   export type Playme = { code: string };
@@ -37,9 +36,6 @@ export namespace PageScriptData {
 
 export namespace BackgroundData {
   export type OnPlayError = PageScriptData.Playme;
-  export type AddNote = { url: string };
-  export type Highlight = undefined;
-  export type Masking = undefined;
 }
 
 export interface Fetcher {

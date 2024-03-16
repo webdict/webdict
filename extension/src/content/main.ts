@@ -1,10 +1,8 @@
-import { PageScriptData, BackgroundData } from '../shared/types';
 import { PageScriptAction, BackgroundAction } from '../shared/enums';
-import highlightSelection from './highlight';
 import trigger from './trigger';
 type Message = { action: BackgroundAction; data: any };
 
-const { onPlayError, onHighlight } = trigger({
+const { onPlayError } = trigger({
   playme(data) {
     const action = PageScriptAction.PLAY_SOUND;
     chrome.runtime.sendMessage({ action, data });
@@ -28,24 +26,5 @@ const { onPlayError, onHighlight } = trigger({
 chrome.runtime.onMessage.addListener(({ action, data }: Message) => {
   if (action === BackgroundAction.PLAY_ERROR) {
     onPlayError(data);
-  } else if (action === BackgroundAction.HIGHLIGHT) {
-    highlightSelection();
-    onHighlight();
-  } else if (action === BackgroundAction.ADD_NOTE) {
-    const noteText = window
-      .getSelection()
-      .toString()
-      .trim();
-    if (noteText) {
-      const { url: furl } = data as BackgroundData.AddNote;
-      const actionData: PageScriptData.AddNote = {
-        note: noteText,
-        furl,
-      };
-      chrome.runtime.sendMessage({
-        action: PageScriptAction.ADD_NOTE,
-        data: actionData,
-      });
-    }
   }
 });

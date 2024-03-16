@@ -1,5 +1,4 @@
 const enum Action {
-  AddNote,
   StopFind,
 }
 

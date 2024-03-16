@@ -7,11 +7,5 @@
   },
   "description": {
     "message": "webdict - Play with New Words"
-  },
-  "addNote": {
-    "message": "Add Note"
-  },
-  "highlight": {
-    "message": "Highlight"
   }
 }

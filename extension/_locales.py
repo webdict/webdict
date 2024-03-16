@@ -12,16 +12,6 @@ data = {
         "zh": "网词快查 - 网页查词，一触即发！",
         #
     },
-    "addNote": {
-        "en": "Add Note",
-        "zh": "保存笔记"
-        #
-    },
-    "highlight": {
-        "en": "Highlight",
-        "zh": "高亮显示"
-        #
-    },
 }
 
 

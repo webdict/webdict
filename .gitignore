@@ -3,5 +3,6 @@
 /extension/webdict
 **/node_modules
 **/__pycache__
+**/*.css.map
 **/.DS_Store
 **/*.zip

@@ -1,0 +1,24 @@
+.options {
+  transition: 200ms;
+  max-width: 640px;
+  padding: 0;
+  margin: 0 auto;
+  border: 1px #eee solid;
+}
+.options-loading {
+  opacity: 0.4;
+}
+.options-item {
+  padding: 16px 32px;
+}
+.options-item + .options-item {
+  border-top: 1px #eee solid;
+}
+.options-form {
+  padding-left: 32px;
+}
+.options-form-item + .options-form-item {
+  margin-top: 4px;
+}
+
+/*# sourceMappingURL=style.css.map */

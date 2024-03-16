@@ -6,7 +6,6 @@ import { host } from '../fetch';
 import Fetch from '../fetch';
 import play from './player';
 import './lifehooks';
-import './urlrewrite';
 import './contextmenus';
 type Message = { action: PageScriptAction; data: any };
 chrome.runtime.onMessage.addListener(

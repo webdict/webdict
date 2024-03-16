@@ -1,7 +1,6 @@
 import { PageScriptData, BackgroundData } from '../shared/types';
 import { PageScriptAction, BackgroundAction } from '../shared/enums';
 import highlightSelection from './highlight';
-import maskWords from './masking';
 import trigger from './trigger';
 type Message = { action: BackgroundAction; data: any };
 
@@ -48,7 +47,5 @@ chrome.runtime.onMessage.addListener(({ action, data }: Message) => {
         data: actionData,
       });
     }
-  } else if (action === BackgroundAction.MASKING) {
-    maskWords();
   }
 });

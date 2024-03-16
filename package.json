@@ -1,11 +1,11 @@
 {
   "name": "webdict",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "author": "李鸿章<paindo@163.com>",
   "license": "MIT",
   "scripts": {
-    "sass": "node-sass $INIT_CWD -o $INIT_CWD; node-sass --watch $INIT_CWD -o $INIT_CWD",
-    "pack": "webpack --config extension/webpack.config.js --watch",
+    "sass": "sass $INIT_CWD:$INIT_CWD; sass --watch $INIT_CWD:$INIT_CWD",
+    "pack": "NODE_OPTIONS=--openssl-legacy-provider webpack --config extension/webpack.config.js --watch",
     "locale": "python3 extension/_locales.py"
   },
   "husky": {
@@ -38,7 +38,7 @@
     "husky": "^1.3.1",
     "lint-staged": "^8.1.0",
     "mini-css-extract-plugin": "^0.4.2",
-    "node-sass": "^4.9.3",
+    "sass": "^1.38.0",
     "prettier": "^1.15.3",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",

@@ -1,7 +1,4 @@
-import { host } from '../fetch';
-// declare const window: any;
 import { BGWindow, OptionProps } from '.';
-import { BackgroundAction } from '../shared/enums';
 
 declare const window: BGWindow;
 
@@ -34,22 +31,8 @@ chrome.storage.sync.get('options', ({ options: _options }) => {
   }
 });
 
-chrome.browserAction.onClicked.addListener(({ id, url }) => {
-  if (/^((http|ws|ftp)s?|file|data):/i.test(url)) {
-    chrome.tabs.sendMessage(id, {
-      action: BackgroundAction.MASKING,
-    });
-  } else {
-    chrome.tabs.query({ currentWindow: true, url: `${host}/*` }, tabs => {
-      if (tabs && tabs[0]) {
-        // 已有，不重复打开
-        chrome.tabs.update(tabs[0].id, { active: true });
-      } else {
-        // 当前空白页
-        chrome.tabs.update(id, { url: `${host}/` });
-      }
-    });
-  }
+chrome.browserAction.onClicked.addListener(() => {
+  window.setOptions('on', !options.on);
 });
 
 export default function getOptions() {

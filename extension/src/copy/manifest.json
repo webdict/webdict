@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_name__",
   "description": "__MSG_description__",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "author": "李鸿章<paindo@163.com>",
   "default_locale": "en",
   "browser_action": {
@@ -16,13 +16,11 @@
     "page": "background.html"
   },
   "permissions": [
-    "webRequestBlocking",
     "unlimitedStorage",
     "notifications",
     "contextMenus",
     "https://*/*",
     "http://*/*",
-    "webRequest",
     "<all_urls>",
     "storage",
     "tabs"
@@ -39,7 +37,6 @@
       "match_about_blank": true,
       "all_frames": true,
       "matches": ["<all_urls>"],
-      "css": ["content.css"],
       "js": ["content.js"]
     }
   ]

@@ -24,13 +24,6 @@ function setIcon(enabled: boolean) {
   });
 }
 
-chrome.storage.sync.get('options', ({ options: _options }) => {
-  if (_options) {
-    setIcon(_options.on);
-    options = _options;
-  }
-});
-
 chrome.browserAction.onClicked.addListener(() => {
   window.setOptions('on', !options.on);
 });
@@ -46,5 +39,4 @@ window.setOptions = (key, val) => {
     setIcon(val);
   }
   options = { ...options, [key]: val };
-  chrome.storage.sync.set({ options });
 };

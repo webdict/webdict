@@ -8,20 +8,14 @@
   "browser_action": {
     "default_icon": "static/icon19.png"
   },
-  "options_ui": {
-    "open_in_tab": true,
-    "page": "options.html"
-  },
   "background": {
     "page": "background.html"
   },
   "permissions": [
-    "unlimitedStorage",
     "notifications",
     "https://*/*",
     "http://*/*",
     "<all_urls>",
-    "storage",
     "tabs"
   ],
   "icons": {
